@@ -1,0 +1,12 @@
+CSS503 (CSS430) Worksheet 01
+2017/06/21
+Martin Metke
+
+I came back to school after working with Linux, OS X, and Cygwin test clients and the Isilon OneFS system (based on FreeBSD) for over ten years, so I'm moderately versed in CLI commands already.  That said:
+
+Problem 5) A-E accomplished with no problems.
+
+Problem 6) A, C-D accomplished just fine.  Just for fun, I also did C using "rename", because it's awesome.  B doesn't work in the NETID-based home dirs due to mount options (see my Canvas discussion on this subject).  Work-around: copied the file to /tmp, changed permissions fine.
+	   Question E is incomplete.  The answer to "How can we?" *should* always be "Python!", but is far too often "Perl?"
+
+Problem 7) A-D accomplished with no problems.
