@@ -1,4 +1,33 @@
-// CSS 430 Program 1
+/** 
+ *  @file    processes.cpp
+ *  @author  Martin Metke (sleet01@uw.edu)
+ *  @date    2017/06/25  
+ *  @version 1.0 
+ *  
+ *  @brief CSS430 Program 1 Part 1 - replicate "ps -A | grep <argv[1]> | wc -l"
+ *
+ *  @section DESCRIPTION
+ *  
+ *  This is a small program that replicates the process of spawning and piping
+ *  child processes in a Linux shell.  In this case, the program first spawns
+ *  a child to run "wc -l"; that process spawns a child which greps incoming
+ *  text for lines matching the CLI argument passed to this file; *that* child
+ *  also spawns a child which runs "ps -A" to output all running processes.
+ *  Alternatively:
+ *
+ *  Great-grandchild "ps -A" outputs to:
+ *      Grandchild "grep <argv[1]>" which outputs to:
+ *          Child "wc -l" which outputs to stdout, which:
+ *              Parent waits for (all children must complete)
+ *  
+ *  This file (once compiled) accepts one command-line argument which can be:
+ *  1) -h / --help          Outputs usage options to the CLI, returns 0
+ *  2) <string>             Any text without spaces, which this file will
+ *                          search the output of "ps -A" for, and then pass
+ *                          through "wc -l" to count the total instances of
+ *                          processes matching that string.
+ *
+ */
 
 #include <stdlib.h>
 #include <stdio.h>
