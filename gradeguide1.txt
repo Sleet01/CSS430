@@ -1,0 +1,28 @@
+Assignment 1 Grading Guide:
+
+1. Report 30% (6pts)
+   Your processes.cpp:
+      No spec/algorithm/discussion.....................................0 or
+      Poor spec/algorithm/discussion...................................2 or
+      Well done........................................................3
+   Your Shell.java:
+      No spec/algorithm/discussion.....................................0 or
+      Poor spec/algorithm/discussion...................................2 or
+      Well done........................................................3
+2. Correctness 50% (10pts)
+   Your processes.cpp:
+      A parent waits for a child.......................................1
+      A child executes "wc -l".........................................1
+      A grand-child executes "grep argv[1]"............................1
+      A great-grand-child executes "ps -A".............................1
+      The same output as ps -A | grep argv[1] | wc -l..................1
+   Your Shell.java:
+      Tests for & were successfully conducted..........................2
+      Tests for ; were successfully conducted..........................2
+      Each command can accept an arbitrary number of arguments.........1
+3. Code Organization (4pts)
+      No comments and horrible code....................................0 or
+      Poor comments or code organization...............................3 or 
+      Well done........................................................4
+
+Total.................................................................20
