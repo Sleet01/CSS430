@@ -15,6 +15,8 @@ public class Scheduler extends Thread {
     // Allocate an ID array, each element indicating if that id has been used
     private int nextId = 0;
 
+    private boolean DEBUG_CERR = false;
+
     private void initTid(int maxThreads) {
         tids = new int[maxThreads];
         for (int i = 0; i < maxThreads; i++)
@@ -42,6 +44,10 @@ public class Scheduler extends Thread {
     private boolean returnTid(int tid) {
         if (tid >= 0 && tid < tids.length && tids[tid] >= 0) {
             tids[tid] = -1;
+            // Reset "next TID" to the returned TID.  Hopefully this makes the scheduler and TestN threads
+            // more responsive (see schedulerSleep() modifications)
+            //nextId = tid;
+            if(DEBUG_CERR) SysLib.cerr("CERR >> Returned TID; new nextId = " + tid + "\n");
             return true;
         }
         return false;
@@ -57,8 +63,11 @@ public class Scheduler extends Thread {
         try{
             switch(queueNum) {
                 case 0: queue0.remove(deadTCB);
+                        break;
                 case 1: queue1.remove(deadTCB);
+                        break;
                 case 2: queue2.remove(deadTCB);
+                        break;
             }
         } catch (NoSuchElementException e){
             SysLib.cerr(e.toString());
@@ -129,6 +138,15 @@ public class Scheduler extends Thread {
         try {
             Thread.sleep(timeSlice);
         } catch (InterruptedException e) {
+            SysLib.cerr(e.toString());
+        }
+    }
+
+    private void schedulerSleep(int slice) {
+        try {
+            Thread.sleep(slice);
+        } catch (InterruptedException e) {
+            SysLib.cerr(e.toString());
         }
     }
 
@@ -162,6 +180,7 @@ public class Scheduler extends Thread {
         try {
             sleep(milliseconds);
         } catch (InterruptedException e) {
+            SysLib.cerr(e.toString());
         }
     }
 
@@ -173,9 +192,10 @@ public class Scheduler extends Thread {
         TCB nextThread;
         int currentQueue;
 
-        Thread current = null;
+        Thread current;
 
         // removed per instructions
+        outer:
         while (true) {
             try {
 
@@ -186,12 +206,16 @@ public class Scheduler extends Thread {
                     // Record the current running queue for later bookkeeping
                     currentQueue = 0;
 
+                    if(DEBUG_CERR) SysLib.cerr("CERR >> Starting tid from Queue0: " + nextThread.getTid() + "\n");
+
                     // a thread in this queue gets 1 timeslice before being moved to the next queue
                     quantaToRun = 1;
                 }
                 else if ((nextThread = queue1.peek()) != null){
                     // Record the current running queue for later bookkeeping
                     currentQueue = 1;
+
+                    if(DEBUG_CERR) SysLib.cerr("CERR >> Starting tid from Queue1: " + nextThread.getTid() + "\n");
 
                     // a thread in this queue gets 2 timeslices before being moved to the next queue
                     quantaToRun = 2;
@@ -200,11 +224,13 @@ public class Scheduler extends Thread {
                     // Record the current running queue for later bookkeeping
                     currentQueue = 2;
 
+                    if(DEBUG_CERR) SysLib.cerr("CERR >> Starting tid from Queue2: " + nextThread.getTid() + "\n");
+
                     // a thread in this queue gets 4 timeslices before being moved to the back of Queue2 again
                     quantaToRun = 4;
                 }
-                else {
-                    continue; // should only occur when all queues are empty
+                else{
+                    continue;
                 }
 
                 TCB currentTCB = nextThread;
@@ -224,10 +250,13 @@ public class Scheduler extends Thread {
                 // This ensures Round-Robin execution for Queue2 threads with preemption by new
                 // Queue0 and Queue1 threads at every time quantum
                 for(int i=0; i < quantaToRun; ++i){
+                    if(DEBUG_CERR) SysLib.cerr("CERR >> Starting TID " + nextThread.getTid() + " quanta " + (i+1) + " of " + quantaToRun + "\n");
 
                     // Check if thread has terminated between last quanta and now
-                    if (currentTCB.getTerminated() == true) {
+                    if (currentTCB.getTerminated()) {
                         this.terminateThread(currentTCB, currentQueue);
+                        if(DEBUG_CERR) SysLib.cerr("CERR >> Thread terminated; exiting for loop early\n");
+
                         break;  // break to outer "while" loop
                     }
                     else{ // The meat of Scheduler operations: start the next valid thread and sleep the Scheduler
@@ -237,18 +266,31 @@ public class Scheduler extends Thread {
                         //
                         if (current != null) {
                             if (current.isAlive()) {
+                                if(DEBUG_CERR) SysLib.cerr("CERR >> Alive thread resuming\n");
                                 // changed to current.resume() per instructions
                                 current.resume();
                             }
                             else {
+                                if(DEBUG_CERR) SysLib.cerr("CERR >> non-Alive thread starting\n");
                                 // Spawn must be controlled by Scheduler
                                 // Scheduler must start a new thread
                                 current.start();
                             }
                         }
 
-                        schedulerSleep();
-                        // System.out.println("* * * Context Switch * * * ");
+                        if(DEBUG_CERR) SysLib.cerr("CERR >> Scheduler sleeping @ " + new Date().getTime() + "\n");
+
+                        // Attempt to massage Thread speeds.  TID 0 is the Scheduler; TID 1 is *usually* the loaded
+                        // class.  With the changes to make "nextId" drop back to 1 after the last loaded class exits,
+                        // this should keep the sleep time for the Scheduler and .join() threads much lower.
+                        if (nextThread.getTid() >= 2){
+                            schedulerSleep();
+                        }
+                        else{
+                            schedulerSleep(10);
+                        }
+
+                        if(DEBUG_CERR) SysLib.cerr("CERR >> Scheduler waking @ " + new Date().getTime() + "\n");
 
                         if (current != null && current.isAlive())
                             // changed to current.suspend() per instructions
@@ -259,8 +301,13 @@ public class Scheduler extends Thread {
                         // then end the for loop and do post-execution cleanup before hitting the next "while"
                         // iteration.
                         synchronized(tids) {
-                            if((--tids[currentTCB.getTid()]) == 0)
+                            if((--tids[currentTCB.getTid()]) == 0) {
+                                if(DEBUG_CERR) SysLib.cerr("CERR >> Decrementing quanta for TID " + currentTCB.getTid() + " to 0\n");
                                 break;
+                            }
+                            else {
+                                if(DEBUG_CERR) SysLib.cerr("CERR >> Decrementing quanta for TID " + currentTCB.getTid() + " to " + tids[currentTCB.getTid()] + "\n");
+                            }
                         }
 
                         // Finally, check if new threads have been enqueued during the current time quantum;
@@ -268,8 +315,17 @@ public class Scheduler extends Thread {
                         // This will leave the current thread at the front of its queue until the next time that queue
                         // is selected.
                         switch (currentQueue){
-                            case 1: if(!(queue0.isEmpty())) continue;
-                            case 2: if(!(queue0.isEmpty() && queue1.isEmpty())) continue;
+                            case 1: if(!(queue0.isEmpty())) {
+                                        if(DEBUG_CERR) SysLib.cerr("CERR >> Queue1 thread preempted by Queue0 thread!\n");
+                                        continue outer;
+                                    }
+                                    break;
+                            case 2: if(!(queue0.isEmpty() && queue1.isEmpty())) {
+                                        if(DEBUG_CERR) SysLib.cerr("CERR >> Queue2 thread preempted by Queue0/Queue1 thread!\n");
+                                        continue outer;
+                                    }
+                                    break;
+                            default: break;
                         }
                     }
                 }
@@ -279,15 +335,20 @@ public class Scheduler extends Thread {
                 switch (currentQueue) {
                     case 0: queue0.remove(currentTCB);
                             queue1.add(currentTCB);
+                            break;
                     case 1: queue1.remove(currentTCB);
                             queue2.add(currentTCB);
+                            break;
                     case 2: queue2.remove(currentTCB);
                             queue2.add(currentTCB);
+                            break;
                 }
 
             } catch (NullPointerException e3) {
+                SysLib.cerr(e3.toString());
             }
             ;
+            if(DEBUG_CERR) SysLib.cerr("CERR >> ======== Finished for loop ======== \n");
         }
     }
 }
