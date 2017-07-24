@@ -1,0 +1,174 @@
+"C:\Program Files\Java\jdk1.8.0_131\bin\java" "-javaagent:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2017.1.4\lib\idea_rt.jar=50153:C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2017.1.4\bin" -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_131\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_131\jre\lib\rt.jar;C:\Users\sleet01\Documents\UWB\2017_SU\CSS430\program2\out\production\program2;C:\Users\sleet01\Documents\UWB\2017_SU\CSS430\program2\ThreadOS" Boot
+threadOS ver 1.0:
+Type ? for help
+threadOS: a new thread (thread=Thread[Thread-3,5,main] tid=0 pid=-1)
+-->l Test2b
+l Test2b
+threadOS: a new thread (thread=Thread[Thread-5,5,main] tid=1 pid=0)
+threadOS: a new thread (thread=Thread[Thread-7,5,main] tid=2 pid=1)
+threadOS: a new thread (thread=Thread[Thread-9,5,main] tid=3 pid=1)
+threadOS: a new thread (thread=Thread[Thread-11,5,main] tid=4 pid=1)
+threadOS: a new thread (thread=Thread[Thread-13,5,main] tid=5 pid=1)
+threadOS: a new thread (thread=Thread[Thread-15,5,main] tid=6 pid=1)
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[b] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[e] is running
+Thread[e] is running
+Thread[e] is running
+Thread[e] is running
+Thread[e] is running
+Thread[e]: response time = 6019 turnaround time = 6558 execution time = 539
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[b]: response time = 2993 turnaround time = 10044 execution time = 7051
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[c] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[c]: response time = 4005 turnaround time = 21121 execution time = 17116
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[a] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[a]: response time = 1992 turnaround time = 29171 execution time = 27179
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d] is running
+Thread[d]: response time = 5019 turnaround time = 33190 execution time = 28171
+Test2b finished
+-->

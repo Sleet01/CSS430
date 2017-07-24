@@ -16,106 +16,36 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Scheduler.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Scheduler.java">
+      <file leaf-file-name="BoundedBuffer.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/boundedbuffer_semaphores/BoundedBuffer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="337" column="64" lean-forward="false" selection-start-line="337" selection-start-column="64" selection-end-line="337" selection-end-column="64" />
+            <state relative-caret-position="255">
+              <caret line="61" column="8" lean-forward="false" selection-start-line="61" selection-start-column="8" selection-end-line="61" selection-end-column="8" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#365#395#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Scheduler_part1.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Scheduler_part1.java">
+      <file leaf-file-name="Semaphore.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/boundedbuffer_semaphores/Semaphore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="156" column="24" lean-forward="false" selection-start-line="156" selection-start-column="24" selection-end-line="156" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Scheduler_part2.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Scheduler_part2.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="28" column="71" lean-forward="false" selection-start-line="28" selection-start-column="71" selection-end-line="28" selection-end-column="71" />
+            <state relative-caret-position="102">
+              <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
               <folding>
-                <marker date="1500333093433" expanded="true" signature="13227:16301" ph="{...}" />
-                <marker date="1500333093433" expanded="true" signature="13300:13625" ph="//..." />
+                <element signature="e#167#168#0" expanded="true" />
+                <element signature="e#198#199#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Test2.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Test2.java">
+      <file leaf-file-name="Buffer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/boundedbuffer_semaphores/Buffer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="24" lean-forward="false" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Test2a.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Test2a.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="6" lean-forward="false" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestThread2.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/TestThread2.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" column="4" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Test2b.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Test2b.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestThread2c.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/TestThread2c.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestThread2b.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/TestThread2b.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestThread2d.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/TestThread2d.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-272">
-              <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+            <state relative-caret-position="204">
+              <caret line="12" column="23" lean-forward="false" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -133,7 +63,7 @@
       <list>
         <Entry>
           <option name="url" value="file://$APPLICATION_CONFIG_DIR$/consoles/groovy/groovy_console.groovy" />
-          <option name="moduleName" value="program2" />
+          <option name="moduleName" value="program3" />
           <option name="title" value="program2 (Bundled Groovy 2.4.6)" />
         </Entry>
       </list>
@@ -145,6 +75,7 @@
         <option value="$PROJECT_DIR$/src/Test2a.java" />
         <option value="$PROJECT_DIR$/src/Test2.java" />
         <option value="$PROJECT_DIR$/src/Scheduler.java" />
+        <option value="$PROJECT_DIR$/boundedbuffer_semaphores/BoundedBuffer.java" />
       </list>
     </option>
   </component>
@@ -170,118 +101,36 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
+              <option name="myItemId" value="program3" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
+              <option name="myItemId" value="program3" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
+              <option name="myItemId" value="program3" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
+              <option name="myItemId" value="program3" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ThreadOS" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scheduler_part2.java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Scheduler_part1.java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="out" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="production" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="program2" />
+              <option name="myItemId" value="boundedbuffer_semaphores" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -471,7 +320,6 @@
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928064" sideWeight="0.42395833" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32928064" sideWeight="0.55" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -485,6 +333,7 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39918947" sideWeight="0.48541668" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32928064" sideWeight="0.42395833" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -515,79 +364,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/lang/Object.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8058">
-          <caret line="501" column="0" lean-forward="false" selection-start-line="501" selection-start-column="0" selection-end-line="501" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Test2b.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_131/src.zip!/java/lang/Thread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12699">
-          <caret line="747" column="0" lean-forward="false" selection-start-line="747" selection-start-column="0" selection-end-line="747" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#79046#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#5559#5560#0" expanded="false" />
-            <element signature="e#5600#5601#0" expanded="false" />
-            <element signature="e#6682#6683#0" expanded="false" />
-            <element signature="e#6722#6723#0" expanded="false" />
-            <element signature="e#15020#15021#0" expanded="false" />
-            <element signature="e#15084#15085#0" expanded="false" />
-            <element signature="e#15704#15705#0" expanded="false" />
-            <element signature="e#15770#15771#0" expanded="false" />
-            <element signature="e#17246#17247#0" expanded="false" />
-            <element signature="e#17313#17314#0" expanded="false" />
-            <element signature="e#17619#17620#0" expanded="false" />
-            <element signature="e#17660#17661#0" expanded="false" />
-            <element signature="e#18578#18579#0" expanded="false" />
-            <element signature="e#18620#18621#0" expanded="false" />
-            <element signature="e#19132#19133#0" expanded="false" />
-            <element signature="e#19175#19176#0" expanded="false" />
-            <element signature="e#21475#21476#0" expanded="false" />
-            <element signature="e#21519#21520#0" expanded="false" />
-            <element signature="e#33588#33589#0" expanded="false" />
-            <element signature="e#33645#33646#0" expanded="false" />
-            <element signature="e#36709#36710#0" expanded="false" />
-            <element signature="e#36767#36768#0" expanded="false" />
-            <element signature="e#37304#37305#0" expanded="false" />
-            <element signature="e#37347#37348#0" expanded="false" />
-            <element signature="e#38621#38622#0" expanded="false" />
-            <element signature="e#38666#38667#0" expanded="false" />
-            <element signature="e#42956#42957#0" expanded="false" />
-            <element signature="e#42987#42988#0" expanded="false" />
-            <element signature="e#43969#43970#0" expanded="false" />
-            <element signature="e#43996#43997#0" expanded="false" />
-            <element signature="e#44253#44254#0" expanded="false" />
-            <element signature="e#44281#44282#0" expanded="false" />
-            <element signature="e#45139#45140#0" expanded="false" />
-            <element signature="e#45208#45209#0" expanded="false" />
-            <element signature="e#46541#46542#0" expanded="false" />
-            <element signature="e#46614#46615#0" expanded="false" />
-            <element signature="e#51076#51077#0" expanded="false" />
-            <element signature="e#51138#51139#0" expanded="false" />
-            <element signature="e#52232#52233#0" expanded="false" />
-            <element signature="e#52261#52262#0" expanded="false" />
-            <element signature="e#66012#66013#0" expanded="false" />
-            <element signature="e#66038#66039#0" expanded="false" />
-            <element signature="e#76018#76019#0" expanded="false" />
-            <element signature="e#76090#76091#0" expanded="false" />
-            <element signature="e#77276#77277#0" expanded="false" />
-            <element signature="e#77311#77312#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Test2.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -600,7 +376,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -608,7 +383,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1173">
           <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -616,9 +390,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding>
-            <element signature="e#691#692#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -681,7 +452,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4573">
           <caret line="276" column="46" lean-forward="false" selection-start-line="276" selection-start-column="46" selection-end-line="276" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -736,7 +506,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -744,7 +513,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4437">
           <caret line="268" column="0" lean-forward="false" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -752,7 +520,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="5610">
           <caret line="383" column="0" lean-forward="false" selection-start-line="383" selection-start-column="0" selection-end-line="383" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -801,7 +568,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="383" column="0" lean-forward="false" selection-start-line="383" selection-start-column="0" selection-end-line="383" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -817,7 +583,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="7" column="13" lean-forward="false" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -832,56 +597,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="11764">
           <caret line="747" column="0" lean-forward="false" selection-start-line="747" selection-start-column="0" selection-end-line="747" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#79046#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#5559#5560#0" expanded="false" />
-            <element signature="e#5600#5601#0" expanded="false" />
-            <element signature="e#6682#6683#0" expanded="false" />
-            <element signature="e#6722#6723#0" expanded="false" />
-            <element signature="e#15020#15021#0" expanded="false" />
-            <element signature="e#15084#15085#0" expanded="false" />
-            <element signature="e#15704#15705#0" expanded="false" />
-            <element signature="e#15770#15771#0" expanded="false" />
-            <element signature="e#17246#17247#0" expanded="false" />
-            <element signature="e#17313#17314#0" expanded="false" />
-            <element signature="e#17619#17620#0" expanded="false" />
-            <element signature="e#17660#17661#0" expanded="false" />
-            <element signature="e#18578#18579#0" expanded="false" />
-            <element signature="e#18620#18621#0" expanded="false" />
-            <element signature="e#19132#19133#0" expanded="false" />
-            <element signature="e#19175#19176#0" expanded="false" />
-            <element signature="e#21475#21476#0" expanded="false" />
-            <element signature="e#21519#21520#0" expanded="false" />
-            <element signature="e#33588#33589#0" expanded="false" />
-            <element signature="e#33645#33646#0" expanded="false" />
-            <element signature="e#36709#36710#0" expanded="false" />
-            <element signature="e#36767#36768#0" expanded="false" />
-            <element signature="e#37304#37305#0" expanded="false" />
-            <element signature="e#37347#37348#0" expanded="false" />
-            <element signature="e#38621#38622#0" expanded="false" />
-            <element signature="e#38666#38667#0" expanded="false" />
-            <element signature="e#42956#42957#0" expanded="false" />
-            <element signature="e#42987#42988#0" expanded="false" />
-            <element signature="e#43969#43970#0" expanded="false" />
-            <element signature="e#43996#43997#0" expanded="false" />
-            <element signature="e#44253#44254#0" expanded="false" />
-            <element signature="e#44281#44282#0" expanded="false" />
-            <element signature="e#45139#45140#0" expanded="false" />
-            <element signature="e#45208#45209#0" expanded="false" />
-            <element signature="e#46541#46542#0" expanded="false" />
-            <element signature="e#46614#46615#0" expanded="false" />
-            <element signature="e#51076#51077#0" expanded="false" />
-            <element signature="e#51138#51139#0" expanded="false" />
-            <element signature="e#52232#52233#0" expanded="false" />
-            <element signature="e#52261#52262#0" expanded="false" />
-            <element signature="e#66012#66013#0" expanded="false" />
-            <element signature="e#66038#66039#0" expanded="false" />
-            <element signature="e#76018#76019#0" expanded="false" />
-            <element signature="e#76090#76091#0" expanded="false" />
-            <element signature="e#77276#77277#0" expanded="false" />
-            <element signature="e#77311#77312#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -889,7 +604,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1173">
           <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -897,9 +611,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding>
-            <element signature="e#691#692#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -907,7 +618,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -915,7 +625,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="577">
           <caret line="501" column="0" lean-forward="false" selection-start-line="501" selection-start-column="0" selection-end-line="501" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -923,7 +632,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
           <caret line="23" column="8" lean-forward="false" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -933,7 +641,6 @@
           <caret line="28" column="71" lean-forward="false" selection-start-line="28" selection-start-column="71" selection-end-line="28" selection-end-column="71" />
           <folding>
             <marker date="1500333093433" expanded="true" signature="13227:16301" ph="{...}" />
-            <marker date="1500333093433" expanded="true" signature="13300:13625" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -942,9 +649,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#1021#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -956,10 +660,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Test2a.java">
+    <entry file="file://$PROJECT_DIR$/src/TestThread2d.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="6" lean-forward="false" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
+        <state relative-caret-position="34">
+          <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Scheduler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5678">
+          <caret line="337" column="64" lean-forward="false" selection-start-line="337" selection-start-column="64" selection-end-line="337" selection-end-column="64" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TestThread2b.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/TestThread2c.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
           <folding />
         </state>
       </provider>
@@ -972,14 +702,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/TestThread2c.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/TestThread2.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -988,36 +710,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/TestThread2b.java">
+    <entry file="file://$PROJECT_DIR$/src/Test2a.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/TestThread2d.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-272">
-          <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+        <state relative-caret-position="0">
+          <caret line="0" column="6" lean-forward="false" selection-start-line="0" selection-start-column="6" selection-end-line="0" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Scheduler_part1.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
+        <state relative-caret-position="577">
           <caret line="156" column="24" lean-forward="false" selection-start-line="156" selection-start-column="24" selection-end-line="156" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Scheduler.java">
+    <entry file="file://$PROJECT_DIR$/boundedbuffer_semaphores/Buffer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="337" column="64" lean-forward="false" selection-start-line="337" selection-start-column="64" selection-end-line="337" selection-end-column="64" />
+        <state relative-caret-position="204">
+          <caret line="12" column="23" lean-forward="false" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/boundedbuffer_semaphores/Semaphore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#167#168#0" expanded="true" />
+            <element signature="e#198#199#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/boundedbuffer_semaphores/BoundedBuffer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="61" column="8" lean-forward="false" selection-start-line="61" selection-start-column="8" selection-end-line="61" selection-end-column="8" />
+          <folding>
+            <element signature="e#365#395#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1074,7 +807,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>program2</last-edited>
+          <last-edited>program3</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
