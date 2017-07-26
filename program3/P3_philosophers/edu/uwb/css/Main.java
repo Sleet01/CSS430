@@ -9,7 +9,7 @@ public class Main {
     // of the thread that's doing the printing.
     // It's an easy way to generate a log of which thread is doing what
 
-    private static boolean DEBUG = false;
+    private static boolean DEBUG = true;
     // Print the message and the thread that's executing this code
     // This is used for debugging purposes
     public static void TPrint(String msg) {
