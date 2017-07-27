@@ -1,6 +1,6 @@
 package edu.uwb.css;
 
-import java.util.concurrent.*;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -9,8 +9,9 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class DiningPhilosophers {
     DiningState[] state;
-    private final Semaphore [] forks;
-    //private final ReentrantLock mutex = new ReentrantLock();
+    private final boolean [] available;
+    private final ReentrantLock lock = new ReentrantLock();
+    private final Condition[] forks;
 
     // This will let all the tests run (and fail)
     // You'll want to remove it once you actually create an array :)
@@ -22,14 +23,20 @@ public class DiningPhilosophers {
         state = new DiningState[nPhil];
 
         // Tautalogically, there are n eating implements for n Philosophers
-        forks = new Semaphore[nPhil];
+        forks = new Condition [nPhil];
+
+        // Allow threads to check current state of forks
+        available = new boolean [nPhil];
 
         for (int i = 0; i < nPhil; ++i){
             // Initialize state of each Philosopher
             state[i] = DiningState.THINKING;
 
-            // Initialize forks
-            forks[i] = new Semaphore(1); // A fork can only be held once
+            // Initialize forks as Conditions on the lock object
+            forks[i] = lock.newCondition(); // A fork can only be held once
+
+            // Initialize availability of forks
+            available[i] = true;
         }
     }
 
@@ -39,11 +46,68 @@ public class DiningPhilosophers {
      */
     public void takeForks(int i) {
         Main.TPrint( "TakeForks:   i=" + i);
+        int left = i;
+        int right = ((nPhil -1) + i) % nPhil;
 
+        lock.lock();
+
+        try {
+
+            // Test loop to see if the forks are available; if not, wait on them.
+            while (!(available[left] && available[right])){
+                // Set current state of Philosopher i to "HUNGRY", indicating that we are waiting to eat.
+                state[i] = DiningState.HUNGRY;
+                if(!(available[left])) {
+                    try {
+                        Main.TPrint("takeForks - WAITING ON LEFT:   i=" + i);
+
+                        forks[left].await();
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+                }
+                if(!(available[right])){
+                    try {
+                        Main.TPrint("takeForks - WAITING ON RIGHT:   i=" + i);
+
+                        forks[right].await();
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+                }
+            }
+            // Mark right and left forks as unavailable
+            available[right] = available[left] = false;
+            state[i] = DiningState.EATING;
+        }
+        finally{
+            lock.unlock();
+        }
     }
 
     public void returnForks(int i) {
         Main.TPrint( "returnForks:   i=" + i );
+
+        int left = i;
+        int right = ((nPhil -1) + i) % nPhil;
+
+        lock.lock();
+
+        try{
+            if (!available[left]) {
+                available[left] = true;
+            }
+            forks[left].signal();
+
+            if (!available[right]) {
+                available[right] = true;
+            }
+            forks[right].signal();
+            state[i] = DiningState.THINKING;
+        }
+        finally{
+            lock.unlock();
+        }
     }
 
     public int numPhilosophers() {
