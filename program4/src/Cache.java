@@ -1,16 +1,22 @@
 import java.util.*;
 import java.util.concurrent.*;
 
+/**
+ * @author  Martin L. Metke
+ * @date    2017/07/30
+ *
+ * The Cache class provides a cached disk access interface for on-demand paging.
+ */
 public class Cache {
+
+    private Entry[] pageTable = null;
 
     public Cache(int blockSize, int cacheBlocks) {
     }
 
-
     private class Entry {
     }
 
-    private Entry[] pageTable = null;
 
     private int findFreePage() {
         return -1;
