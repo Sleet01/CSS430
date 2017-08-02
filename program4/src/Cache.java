@@ -35,7 +35,19 @@ public class Cache {
         return -1;
     }
 
-    private void writeBack(int victimEntry) {
+    /**
+     * @brief   Write a specific CacheEntry from the table out to the disk via SysLib
+     * @pre     victim is valid
+     * @post    victim will be clean, and all changes within its data will be on disk
+     * @param victimEntry   int, index of the victim within cacheTable
+     */
+    private void writeBackPage(int victimEntry) {
+
+        CacheEntry victim = cacheTable[victimEntry];
+        if(victim.dirtybit) {
+            SysLib.rawwrite(victim.block, victim.data);
+        }
+        victim.dirtybit = false;
     }
 
     public synchronized boolean read(int blockId, byte buffer[]) {
