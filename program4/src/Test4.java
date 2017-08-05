@@ -177,6 +177,45 @@ class Test4 extends Thread {
         return values;
     }
 
+    public Object [] testLocalizedAccess(){
+        byte [] bytemap = new byte[512];
+        byte [] readin = new byte[512];
+        initializeBytes(bytemap, "f0f0f0f0");
+
+        Object [] values = new Object [3];
+        boolean success = true;
+
+        int bottom = getRandom(0,989);
+        int top = bottom + 10;
+
+        values[0] = new Date().getTime();
+
+        if(caching) {
+            // Initialize 10 locations (fills the cache)
+            for (int i = 0; i < 10; ++i){
+                success = success & (SysLib.cwrite(bottom + i, bytemap) == OK);
+            }
+            for (int i = 0; i < PASSES; ++i) {
+                success = success & (SysLib.cread(getRandom(bottom, top), readin) == OK);
+                success = success & (Arrays.equals(bytemap, readin));
+            }
+        } else {
+            for (int i = 0; i < 10; ++i){
+                success = success & (SysLib.rawwrite(bottom + i, bytemap) == OK);
+            }
+            for (int i = 0; i < PASSES; ++i) {
+                success = success & (SysLib.rawread(getRandom(bottom, top), readin) == OK);
+                success = success & (Arrays.equals(bytemap, readin));
+            }
+        }
+
+        values[1] = new Date().getTime();
+        values[2] = success;
+
+        return values;
+
+    }
+
     /**
      * @brief   Homework 4 test runner.  Ideally, I'd use a Command Pattern here, but I'm in a hurry.
      */
@@ -253,7 +292,18 @@ class Test4 extends Thread {
                 break;
             }
             case 2: {
-                SysLib.cout("This suite is not yet implemented!" + "\n");
+                SysLib.cout("SUITE 2: localized writes + reads\n");
+                Object [] results = testLocalizedAccess();
+                long elapsed = (long)results[1] - (long)results[0];
+
+                SysLib.cout(String.format("All operations completed successfully: %s\n", (boolean)results[2]));
+
+                SysLib.cout(String.format("Total runtime: %d ms\n", elapsed));
+
+                SysLib.cout(String.format("Average time per read/write cycle: %f ms\n", elapsed/(1.0 * PASSES)));
+
+                SysLib.flush();
+
                 break;
             }
             case 3: {
