@@ -1,15 +1,22 @@
+import java.util.Arrays;
 import java.util.Date;
-
+import java.util.Random;
 
 
 class Test4 extends Thread {
 
+    // CONSTANTS
     private final static int OK = Kernel.OK;
     private final static int ERROR = Kernel.ERROR;
+    private final static int PASSES = 200;
+
+    // setting variables
     private int suite;
     private boolean caching;
     private int instError = 0;
 
+    // The loader is not smart enough to handle passing a zero-length String [] to the other Constructor,
+    // so this constructor handles the invocation "l Test4".
     public Test4(){
         this.instError = 1;
     }
@@ -42,14 +49,30 @@ class Test4 extends Thread {
 
     }
 
+
+    private static int getRandom(int min, int max){
+
+        Random r = new Random();
+
+        return r.nextInt(max - min) + min;
+
+    }
+
+
+    public void initializeBytes(byte [] block, String pattern){
+        for(int i = 0; i < block.length; ++i){
+            block[i] = (byte)(pattern.charAt(i % pattern.length() ));
+        }
+    }
+
     public boolean testBadReadFails(){
         boolean result = false;
         if(caching) {
             result = (SysLib.cread(-1, new byte[512]) == ERROR);
             result = result & (SysLib.cread(1000, new byte[512]) == ERROR);
         } else {
-            result = (SysLib.rawread(-1, new byte[512]) == ERROR);
-            result = result & (SysLib.rawread(1000, new byte[512]) == ERROR);
+            // This automatically fails with rawreads.
+            result = false;
         }
         return result;
     }
@@ -74,25 +97,106 @@ class Test4 extends Thread {
         return result;
     }
 
+    public boolean testWriteToZero(){
+        boolean result = false;
+        boolean wrote = false;
+        boolean read = false;
+        byte [] bytemap = new byte[512];
+        byte [] readback = new byte [512];
+        initializeBytes(bytemap, "01010101" );
+
+        if(caching){
+            wrote = ( SysLib.cwrite(0, bytemap) == OK);
+            read = ( SysLib.cread(0, readback) == OK);
+        } else {
+            wrote = ( SysLib.rawwrite(0, bytemap) == OK);
+            read = ( SysLib.rawread(0, readback) == OK);
+        }
+
+        if(wrote && read){
+            result = Arrays.equals(bytemap, readback);
+        } else {
+            result = false;
+        }
+
+        return result;
+    }
+
+    public boolean testWriteToLast(){
+        boolean result = false;
+        boolean wrote = false;
+        boolean read = false;
+        byte [] bytemap = new byte[512];
+        byte [] readback = new byte [512];
+        initializeBytes(bytemap, "10101010" );
+
+        if(caching){
+            wrote = ( SysLib.cwrite(999, bytemap) == OK);
+            read = ( SysLib.cread(999, readback) == OK);
+        } else {
+            wrote = ( SysLib.rawwrite(999, bytemap) == OK);
+            read = ( SysLib.rawread(999, readback) == OK);
+        }
+
+        if(wrote && read){
+            result = Arrays.equals(bytemap, readback);
+        } else {
+            result = false;
+        }
+
+        return result;
+    }
+
+    public Object [] testRandomAccess(){
+
+        byte [] bytemap = new byte[512];
+        byte [] readin = new byte[512];
+        initializeBytes(bytemap, "DEADBEEF");
+
+        Object [] values = new Object [3];
+        boolean success = true;
+
+        values[0] = new Date().getTime();
+
+        if(caching) {
+            for (int i = 0; i < PASSES; ++i) {
+                success = success & (SysLib.cwrite(getRandom(0, 999), bytemap) == OK);
+                success = success & (SysLib.cread(getRandom(0, 999), readin) == OK);
+
+            }
+        } else {
+            for (int i = 0; i < PASSES; ++i) {
+                success = success & (SysLib.rawwrite(getRandom(0, 999), bytemap) == OK);
+                success = success & (SysLib.rawread(getRandom(0, 999), readin) == OK);
+            }
+        }
+
+        values[1] = new Date().getTime();
+        values[2] = success;
+
+        return values;
+    }
+
     /**
      * @brief   Homework 4 test runner.  Ideally, I'd use a Command Pattern here, but I'm in a hurry.
      */
     public void run(){
 
+        // Error handling
         switch(this.instError) {
             case 0: break;
             case 1: {
-                SysLib.cout("Incorrect Test4 invocation!  Use \"Test4 <enabled|disabled> <0-4>\"");
+                SysLib.cout("Incorrect Test4 invocation!  Use \"Test4 <enabled|disabled> <0-4>\"" + "\n");
                 SysLib.exit();
                 break;
             }
             case 2: {
-                SysLib.cout("Invalid caching selection!  Use \"enabled\" or \"disabled\"");
+                SysLib.cout("Invalid caching selection!  Use \"enabled\" or \"disabled\"" + "\n");
                 SysLib.exit();
                 break;
             }
             case 3: {
-                SysLib.cout("Invalid suite selection!  Use \"0\" through \"4\"");
+                SysLib.cout("Invalid suite selection!  Use \"0\" through \"4\"" + "\n");
                 SysLib.exit();
                 break;
             }
@@ -113,29 +217,51 @@ class Test4 extends Thread {
                 count += ((last) ? 0 : 1);
 
                 last = testReadLastSucceeds();
-                SysLib.cout("Test 2: Read from Block 0 succeeds: " + ((last) ? "PASS" : "FAIL") + "\n");
+                SysLib.cout("Test 3: Read from Block 999 succeeds: " + ((last) ? "PASS" : "FAIL") + "\n");
+                count += ((last) ? 0 : 1);
+
+                last = testWriteToZero();
+                SysLib.cout("Test 4: Write to Block 0 succeeds: " + ((last) ? "PASS" : "FAIL") + "\n");
+                count += ((last) ? 0 : 1);
+
+                last = testWriteToLast();
+                SysLib.cout("Test 5: Write to Block 999 succeeds: " + ((last) ? "PASS" : "FAIL") + "\n");
                 count += ((last) ? 0 : 1);
 
                 // Output totals
                 SysLib.cout("TOTAL FAILURES: " + count + "\n");
 
+                SysLib.flush();
+
                 break;
 
             }
             case 1: {
-                SysLib.cout("This suite is not yet implemented!");
+
+                SysLib.cout("SUITE 1: Random Read/Write Test \n");
+                Object [] results = testRandomAccess();
+                long elapsed = (long)results[1] - (long)results[0];
+
+                SysLib.cout(String.format("All operations completed successfully: %s\n", (boolean)results[2]));
+
+                SysLib.cout(String.format("Total runtime: %d ms\n", elapsed));
+
+                SysLib.cout(String.format("Average time per read/write cycle: %f ms\n", elapsed/(1.0 * PASSES)));
+
+                SysLib.flush();
+
                 break;
             }
             case 2: {
-                SysLib.cout("This suite is not yet implemented!");
+                SysLib.cout("This suite is not yet implemented!" + "\n");
                 break;
             }
             case 3: {
-                SysLib.cout("This suite is not yet implemented!");
+                SysLib.cout("This suite is not yet implemented!" + "\n");
                 break;
             }
             case 4: {
-                SysLib.cout("This suite is not yet implemented!");
+                SysLib.cout("This suite is not yet implemented!" + "\n");
                 break;
             }
         }

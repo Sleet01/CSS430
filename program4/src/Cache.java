@@ -154,7 +154,8 @@ public class Cache {
             // If the block was in the cache, copy it into the buffer and update the reference bit of that
             // cache block.
             if (cacheTable[i].block == blockId){
-                buffer = cacheTable[i].data.clone();
+                //SysLib.cout(String.format("<< CACHE >> read: found cached at index %d", i));
+                System.arraycopy(cacheTable[i].data, 0, buffer, 0, 512);
                 cacheTable[i].refbit = true;
                 read = true;
                 break;
@@ -191,7 +192,8 @@ public class Cache {
         // If a zero-length byte[] is passed in, however, the buffer will not be filled.
         if(readFromDisk){
             if(buffer.length != 0) {
-                buffer = cacheTable[victimId].data.clone();
+                System.arraycopy(cacheTable[victimId].data, 0, buffer, 0, 512);
+                //buffer = cacheTable[victimId].data.clone();
             }
             cacheTable[victimId].refbit = true;
         }
@@ -244,7 +246,8 @@ public class Cache {
             // Whether the selected index is used but cached; empty; or a nominated victim, we are going to
             // overwrite its contents and mark it as a referenced, dirty cache block.
             cacheTable[index].block = blockId;
-            cacheTable[index].data = buffer.clone();
+            System.arraycopy(buffer, 0, cacheTable[index].data, 0, 512);
+            //cacheTable[index].data = buffer.clone();
             cacheTable[index].refbit = true;
             cacheTable[index].dirtybit = true;
             wrote = true;
