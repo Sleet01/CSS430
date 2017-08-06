@@ -241,30 +241,40 @@ class Test4 extends Thread {
         Object [] values = new Object [3];
         boolean success = true;
 
-        int bottom = getRandom(0,989);
-        int top = bottom + 10;
+        int bottom = 10 * getRandom(0,99);
+        int actual;
 
         values[0] = new Date().getTime();
 
-        for (int j = 0; j < patterns.length; ++j) {
+        for (int i = 0; i < PASSES; ++i){
 
-            initializeBytes(bytemap, patterns[j]);
+            initializeBytes(bytemap, patterns[i%patterns.length]);
 
-            if (caching) {
-                // Initialize 10 locations (fills the cache)
-                for (int i = 0; i < 10; ++i) {
-                    success = success & (SysLib.cwrite(bottom + i, bytemap) == OK);
+            // Similar to Localized Access, make 10 write and read access.
+            // The difference is, each write/read pair has a 10% chance to access some random
+            // location instead.
+            for(int j = 0; j < 10; ++j){
+
+                if(getRandom(1,10) % 10 == 0){
+                    // Occasionally received ArrayIndexOutOfBoundsException from Disk.run, so let's keep the random
+                    // accesses away from the edge of the disk for now.
+                    actual = getRandom(1,998);
                 }
-                for (int i = 0; i < PASSES; ++i) {
-                    success = success & (SysLib.cread(getRandom(bottom, top), readin) == OK);
+                else{
+                    actual = bottom + i;
+                }
+
+                if (caching) {
+                    // Initialize location
+                    success = success & (SysLib.cwrite(actual, bytemap) == OK);
+                    // Read back written blocks and check for correctness
+                    success = success & (SysLib.cread(actual, readin) == OK);
                     success = success & (Arrays.equals(bytemap, readin));
-                }
-            } else {
-                for (int i = 0; i < 10; ++i) {
-                    success = success & (SysLib.rawwrite(bottom + i, bytemap) == OK);
-                }
-                for (int i = 0; i < PASSES; ++i) {
-                    success = success & (SysLib.rawread(getRandom(bottom, top), readin) == OK);
+                } else {
+                    // Initialize location
+                    success = success & (SysLib.rawwrite(actual, bytemap) == OK);
+                    // Spend some time reading back random blocks within the specified locality
+                    success = success & (SysLib.rawread(actual, readin) == OK);
                     success = success & (Arrays.equals(bytemap, readin));
                 }
             }
@@ -367,7 +377,18 @@ class Test4 extends Thread {
                 break;
             }
             case 3: {
-                SysLib.cout("This suite is not yet implemented!" + "\n");
+                SysLib.cout("SUITE 3: Mixed Access: 90% localized, 10% random\n");
+                Object [] results = testMixedAccess();
+                long elapsed = (long)results[1] - (long)results[0];
+
+                SysLib.cout(String.format("All operations completed successfully: %s\n", (boolean)results[2]));
+
+                SysLib.cout(String.format("Total runtime: %d ms\n", elapsed));
+
+                SysLib.cout(String.format("Average time per 10x write + 10x read cycle: %f ms\n", elapsed/(1.0 * PASSES)));
+
+                SysLib.flush();
+
                 break;
             }
             case 4: {
