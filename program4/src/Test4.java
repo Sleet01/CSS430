@@ -182,36 +182,43 @@ class Test4 extends Thread {
         byte [] bytemap = new byte[512];
         byte [] readin = new byte[512];
         String [] patterns = {"a0a0a0a0", "b1b1b1b1", "c2c2c2c2", "d3d3d3d3",
-                              "e4e4e4e4", "f5f5f5f5", "g6g6g6g6", "h7h7h7h7",
-                              "i8i8i8i8", "j9j9j9j9"};
+                "e4e4e4e4", "f5f5f5f5", "g6g6g6g6", "h7h7h7h7",
+                "i8i8i8i8", "j9j9j9j9"};
+
+        // Set a new span of disk blocks to access.
+        int bottom = 10 * getRandom(0,98);
+        int top = bottom + 10;
 
         Object [] values = new Object [3];
         boolean success = true;
 
-        int bottom = getRandom(0,989);
-        int top = bottom + 10;
-
+        // Initial start time
         values[0] = new Date().getTime();
 
-        for (int j = 0; j < patterns.length; ++j) {
+        // Make PASSES x passes x 10 writes and 10 reads (with check)
+        for (int k = 0; k < PASSES; ++k){
 
-            initializeBytes(bytemap, patterns[j]);
+            // Get a new pattern to write and read back
+            initializeBytes(bytemap, patterns[k % patterns.length]);
 
             if (caching) {
                 // Initialize 10 locations (fills the cache)
                 for (int i = 0; i < 10; ++i) {
                     success = success & (SysLib.cwrite(bottom + i, bytemap) == OK);
                 }
-                for (int i = 0; i < PASSES/10; ++i) {
-                    success = success & (SysLib.cread(getRandom(bottom, top), readin) == OK);
+                // Read back written blocks and check for correctness
+                for (int i = 0; i < 10; ++i) {
+                    success = success & (SysLib.cread(bottom + i, readin) == OK);
                     success = success & (Arrays.equals(bytemap, readin));
                 }
             } else {
+                // Initialize 10 locations (fills the blocks on disk)
                 for (int i = 0; i < 10; ++i) {
                     success = success & (SysLib.rawwrite(bottom + i, bytemap) == OK);
                 }
-                for (int i = 0; i < PASSES/10; ++i) {
-                    success = success & (SysLib.rawread(getRandom(bottom, top), readin) == OK);
+                // Spend some time reading back random blocks within the specified locality
+                for (int i = 0; i < 10; ++i) {
+                    success = success & (SysLib.rawread(bottom + i, readin) == OK);
                     success = success & (Arrays.equals(bytemap, readin));
                 }
             }
@@ -345,7 +352,7 @@ class Test4 extends Thread {
                 break;
             }
             case 2: {
-                SysLib.cout("SUITE 2: localized writes + reads\n");
+                SysLib.cout("SUITE 2: localized writes + reads in blocks of 10 writes + 10 reads\n");
                 Object [] results = testLocalizedAccess();
                 long elapsed = (long)results[1] - (long)results[0];
 
@@ -353,7 +360,7 @@ class Test4 extends Thread {
 
                 SysLib.cout(String.format("Total runtime: %d ms\n", elapsed));
 
-                SysLib.cout(String.format("Average time per read/write cycle: %f ms\n", elapsed/(1.0 * PASSES)));
+                SysLib.cout(String.format("Average time per 10x write + 10x read cycle: %f ms\n", elapsed/(1.0 * PASSES)));
 
                 SysLib.flush();
 
