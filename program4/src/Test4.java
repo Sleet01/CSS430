@@ -178,9 +178,12 @@ class Test4 extends Thread {
     }
 
     public Object [] testLocalizedAccess(){
+
         byte [] bytemap = new byte[512];
         byte [] readin = new byte[512];
-        initializeBytes(bytemap, "f0f0f0f0");
+        String [] patterns = {"a0a0a0a0", "b1b1b1b1", "c2c2c2c2", "d3d3d3d3",
+                              "e4e4e4e4", "f5f5f5f5", "g6g6g6g6", "h7h7h7h7",
+                              "i8i8i8i8", "j9j9j9j9"};
 
         Object [] values = new Object [3];
         boolean success = true;
@@ -190,22 +193,27 @@ class Test4 extends Thread {
 
         values[0] = new Date().getTime();
 
-        if(caching) {
-            // Initialize 10 locations (fills the cache)
-            for (int i = 0; i < 10; ++i){
-                success = success & (SysLib.cwrite(bottom + i, bytemap) == OK);
-            }
-            for (int i = 0; i < PASSES; ++i) {
-                success = success & (SysLib.cread(getRandom(bottom, top), readin) == OK);
-                success = success & (Arrays.equals(bytemap, readin));
-            }
-        } else {
-            for (int i = 0; i < 10; ++i){
-                success = success & (SysLib.rawwrite(bottom + i, bytemap) == OK);
-            }
-            for (int i = 0; i < PASSES; ++i) {
-                success = success & (SysLib.rawread(getRandom(bottom, top), readin) == OK);
-                success = success & (Arrays.equals(bytemap, readin));
+        for (int j = 0; j < patterns.length; ++j) {
+
+            initializeBytes(bytemap, patterns[j]);
+
+            if (caching) {
+                // Initialize 10 locations (fills the cache)
+                for (int i = 0; i < 10; ++i) {
+                    success = success & (SysLib.cwrite(bottom + i, bytemap) == OK);
+                }
+                for (int i = 0; i < PASSES/10; ++i) {
+                    success = success & (SysLib.cread(getRandom(bottom, top), readin) == OK);
+                    success = success & (Arrays.equals(bytemap, readin));
+                }
+            } else {
+                for (int i = 0; i < 10; ++i) {
+                    success = success & (SysLib.rawwrite(bottom + i, bytemap) == OK);
+                }
+                for (int i = 0; i < PASSES/10; ++i) {
+                    success = success & (SysLib.rawread(getRandom(bottom, top), readin) == OK);
+                    success = success & (Arrays.equals(bytemap, readin));
+                }
             }
         }
 
@@ -213,7 +221,52 @@ class Test4 extends Thread {
         values[2] = success;
 
         return values;
+    }
 
+    public Object [] testMixedAccess(){
+
+        byte [] bytemap = new byte[512];
+        byte [] readin = new byte[512];
+        String [] patterns = {"a0a0a0a0", "b1b1b1b1", "c2c2c2c2", "d3d3d3d3",
+                "e4e4e4e4", "f5f5f5f5", "g6g6g6g6", "h7h7h7h7",
+                "i8i8i8i8", "j9j9j9j9"};
+
+        Object [] values = new Object [3];
+        boolean success = true;
+
+        int bottom = getRandom(0,989);
+        int top = bottom + 10;
+
+        values[0] = new Date().getTime();
+
+        for (int j = 0; j < patterns.length; ++j) {
+
+            initializeBytes(bytemap, patterns[j]);
+
+            if (caching) {
+                // Initialize 10 locations (fills the cache)
+                for (int i = 0; i < 10; ++i) {
+                    success = success & (SysLib.cwrite(bottom + i, bytemap) == OK);
+                }
+                for (int i = 0; i < PASSES; ++i) {
+                    success = success & (SysLib.cread(getRandom(bottom, top), readin) == OK);
+                    success = success & (Arrays.equals(bytemap, readin));
+                }
+            } else {
+                for (int i = 0; i < 10; ++i) {
+                    success = success & (SysLib.rawwrite(bottom + i, bytemap) == OK);
+                }
+                for (int i = 0; i < PASSES; ++i) {
+                    success = success & (SysLib.rawread(getRandom(bottom, top), readin) == OK);
+                    success = success & (Arrays.equals(bytemap, readin));
+                }
+            }
+        }
+
+        values[1] = new Date().getTime();
+        values[2] = success;
+
+        return values;
     }
 
     /**
