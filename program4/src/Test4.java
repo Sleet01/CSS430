@@ -30,6 +30,24 @@ class Test4 extends Thread {
         this.instError = 1;
     }
 
+    /**
+     * @brief   The constructor that testing should always use
+     * @pre     N/A
+     * @post    A new Test4 thread will be created.  The suite to run, the caching
+     *          mode (caching = "true" or "false"), and any runtime errors will be recorded
+     *          in private instance variables.
+     * @param argv      String[] containing the caching option and test suite to use
+     *                  argv[0]:    "enabled": use cache
+     *                              "disabled": use raw writes/reads to/from "disk"
+     *                  argv[1]:    "1" - "4" = Program4 required perf tests
+     *                              "1":    Fully randomized writes and reads
+     *                              "2":    Fully localized writes and reads to 10 contiguous blocks
+     *                              "3":    Mixed localized/random access; 90%/10%
+     *                              "4":    "Adversarial" access: every read or write is to a different "track"
+     *                              "0":    Development unit tests of various Cache.java methods
+     *                              "5":    Specific test of cache and second-chance algorithm
+     *                                      (requires instrumentation in Cache.java to be uncommented)
+     */
     public Test4(String [] argv){
 
         // Only accepts 2 arguments
@@ -64,6 +82,7 @@ class Test4 extends Thread {
     //                         UNIT TEST METHODS                        //
     //////////////////////////////////////////////////////////////////////
 
+    // Generate a random integer between min and max, inclusive
     private static int getRandom(int min, int max){
 
         Random r = new Random();
@@ -72,13 +91,17 @@ class Test4 extends Thread {
 
     }
 
-
+    // Fill a given byte [] with a repeated pattern of "char" bytes taken from a String
     public void initializeBytes(byte [] block, String pattern){
         for(int i = 0; i < block.length; ++i){
             block[i] = (byte)(pattern.charAt(i % pattern.length() ));
         }
     }
 
+    // Unit test that reads out of bounds fail and return "false"
+    // Note: rather than returning ERROR, it appears that one of Disk, Kernel, or SysLib
+    // throws an exception and hangs when an OOB access is attempted, so this test
+    // automatically fails when caching is disabled.
     public boolean testBadReadFails(){
         boolean result = false;
         if(caching) {
@@ -91,6 +114,7 @@ class Test4 extends Thread {
         return result;
     }
 
+    // Unit test that checks if a read to disk block 0 succeeds
     public boolean testReadZeroSucceeds(){
         boolean result = false;
         if(caching) {
@@ -101,6 +125,7 @@ class Test4 extends Thread {
         return result;
     }
 
+    // Unit test that checks if a read to disk block 999 succeeds
     public boolean testReadLastSucceeds(){
         boolean result = false;
         if(caching) {
@@ -111,6 +136,7 @@ class Test4 extends Thread {
         return result;
     }
 
+    // Unit test of write to disk block 0
     public boolean testWriteToZero(){
         boolean result = false;
         boolean wrote = false;
@@ -136,6 +162,7 @@ class Test4 extends Thread {
         return result;
     }
 
+    // Unit test of write to disk block 999
     public boolean testWriteToLast(){
         boolean result = false;
         boolean wrote = false;
@@ -161,6 +188,7 @@ class Test4 extends Thread {
         return result;
     }
 
+    // Compares read and write speeds to verify that write-back and read-in are working properly
     public boolean testReadWriteSpeeds(){
         boolean result = true;
         byte [] bytemap = new byte[512];
@@ -170,7 +198,7 @@ class Test4 extends Thread {
             blocks[i] = getRandom(0,999);
         }
 
-        long startTime = new Date().getTime();
+        long startTime = System.nanoTime();
         long endTime;
 
         for(int i=0; i<PASSES; ++i){
@@ -183,11 +211,11 @@ class Test4 extends Thread {
             }
         }
 
-        endTime = new Date().getTime();
+        endTime = System.nanoTime();
         SysLib.cout(String.format("Average read speed: %f %n", (endTime - startTime)/(1.0 * PASSES)));
 
         initializeBytes(bytemap, "TIMETEST");
-        startTime = new Date().getTime();
+        startTime = System.nanoTime();
 
         for(int i=0; i<PASSES; ++i){
             if(caching) {
@@ -198,13 +226,14 @@ class Test4 extends Thread {
             }
         }
 
-        endTime = new Date().getTime();
+        endTime = System.nanoTime();
         SysLib.cout(String.format("Average write speed: %f %n", (endTime - startTime)/(1.0 * PASSES)));
 
         return result;
     }
 
-    // Exercise enhanced second-chance algo
+    // Exercise enhanced second-chance algorithm by filling, invalidating, and re-filling
+    // blocks in the buffer.
     public boolean testSecondChance(){
         boolean result = true;
         byte [] bytemap = new byte[512];
@@ -259,6 +288,15 @@ class Test4 extends Thread {
     //                         MAIN TEST METHODS                        //
     //////////////////////////////////////////////////////////////////////
 
+    /**
+     * @brief   Test of cached or uncached random writes and reads.
+     * @pre     Kernel has initialized a Cache.  Cache is new or has been flushed.
+     * @post    Pattern "DEADBEEF" will be written to 200 blocks on disk.  Cache will be full.
+     * @return  values      Object[] containing test results
+     *                      values[0]:  start time of the test
+     *                      values[1]:  end time of the test
+     *                      values[2]:  boolean indicating whether all operations succeeded or not
+     */
     public Object [] testRandomAccess(){
 
         byte [] bytemap = new byte[512];
@@ -268,7 +306,7 @@ class Test4 extends Thread {
         Object [] values = new Object [3];
         boolean success = true;
 
-        values[0] = new Date().getTime();
+        values[0] = System.nanoTime();
 
         if(caching) {
             for (int i = 0; i < PASSES; ++i) {
@@ -283,12 +321,21 @@ class Test4 extends Thread {
             }
         }
 
-        values[1] = new Date().getTime();
+        values[1] = System.nanoTime();
         values[2] = success;
 
         return values;
     }
 
+    /**
+     * @brief   Test of completely localized access (best-case scenario for caching) either cached or uncached.
+     * @pre     Kernel has initialized a Cache.  Cache is new or has been flushed.
+     * @post    10 rotating patterns will be written on disk in a 10-block segment.  Cache will be full.
+     * @return  values      Object[] containing test results
+     *                      values[0]:  start time of the test
+     *                      values[1]:  end time of the test
+     *                      values[2]:  boolean indicating whether all operations succeeded or not
+     */
     public Object [] testLocalizedAccess(){
 
         byte [] bytemap = new byte[512];
@@ -305,7 +352,7 @@ class Test4 extends Thread {
         boolean success = true;
 
         // Initial start time
-        values[0] = new Date().getTime();
+        values[0] = System.nanoTime();
 
         // Make PASSES x passes x 10 writes and 10 reads (with check)
         for (int k = 0; k < PASSES; ++k){
@@ -336,12 +383,22 @@ class Test4 extends Thread {
             }
         }
 
-        values[1] = new Date().getTime();
+        values[1] = System.nanoTime();
         values[2] = success;
 
         return values;
     }
 
+    /**
+     * @brief   Test of mixed (90% localized, 10% random) access, either cached or uncached.
+     * @pre     Kernel has initialized a Cache.  Cache is new or has been flushed.
+     * @post    10 rotating patterns will be written on disk with 90% of blocks being contiguous
+     *          and 10% being randomly selected from the full range of the disk.
+     * @return  values      Object[] containing test results
+     *                      values[0]:  start time of the test
+     *                      values[1]:  end time of the test
+     *                      values[2]:  boolean indicating whether all operations succeeded or not
+     */
     public Object [] testMixedAccess(){
 
         byte [] bytemap = new byte[512];
@@ -356,7 +413,7 @@ class Test4 extends Thread {
         int bottom = 10 * getRandom(0,99);
         int actual;
 
-        values[0] = new Date().getTime();
+        values[0] = System.nanoTime();
 
         for (int i = 0; i < PASSES; ++i){
 
@@ -373,7 +430,7 @@ class Test4 extends Thread {
                     actual = getRandom(1,998);
                 }
                 else{
-                    actual = bottom + i;
+                    actual = bottom + j;
                 }
 
                 if (caching) {
@@ -392,12 +449,22 @@ class Test4 extends Thread {
             }
         }
 
-        values[1] = new Date().getTime();
+        values[1] = System.nanoTime();
         values[2] = success;
 
         return values;
     }
 
+    /**
+     * @brief   Test of adversarial access.  Every
+     * @pre     Kernel has initialized a Cache.  Cache is new or has been flushed.
+     * @post    10 rotating patterns will be written on disk with 90% of blocks being contiguous
+     *          and 10% being randomly selected from the full range of the disk.
+     * @return  values      Object[] containing test results
+     *                      values[0]:  start time of the test
+     *                      values[1]:  end time of the test
+     *                      values[2]:  boolean indicating whether all operations succeeded or not
+     */
     public Object [] testAdversarialAccess(){
 
         byte [] bytemap = new byte[512];
@@ -409,25 +476,27 @@ class Test4 extends Thread {
         Object [] values = new Object [3];
         boolean success = true;
 
-        // Generate a random list of tracks to access in order, so that we guarantee head movement
-        // between each access.
+        // Generate a random list of unique tracks to access in order, so that we guarantee
+        // head movement between each access.
         // It's at this point that I'd like to point how much easier this is to achieve in Python.
         List<Integer> tracks = IntStream.range(0, 10).boxed().collect(Collectors.toList());
         Collections.shuffle(tracks);
 
-        values[0] = new Date().getTime();
+        values[0] = System.nanoTime();
 
         int i = 0;
         int block;
 
-        // The random test made one random write and one random read for each test pass
+        // The random test made one random write and one random read for each test pass so
+        // I doubled up the number of passes, but each one is *either* a read or a write.
+        // This should make comparisons between the Random and Adversarial tests simpler.
         while (i < PASSES * 2){
 
             // Set new pattern
             initializeBytes(bytemap, patterns[i%patterns.length]);
 
-            // Iterate repeatedly through tracks and calculate a new block address within that track to write and read.
-            // This guarantees zero cache hits, so slightly worse performance than just random access
+            // Iterate repeatedly through tracks and calculate a new block address within that track to write or read.
+            // This guarantees zero cache hits, so equal or slightly worse performance than just random access.
             block = (tracks.get(i % tracks.size()) * 100) + getRandom(0,99);
 
             if(caching){
@@ -454,7 +523,7 @@ class Test4 extends Thread {
             ++i;
         }
 
-        values[1] = new Date().getTime();
+        values[1] = System.nanoTime();
         values[2] = success;
 
         return values;
@@ -463,10 +532,13 @@ class Test4 extends Thread {
 
     /**
      * @brief   Homework 4 test runner.  Ideally, I'd use a Command Pattern here, but I'm in a hurry.
+     * @pre     Kernel has a Cache instance.  Cache instance is empty or has been flushed.
+     * @post    Cache will be empty, as all operations call "flush" before exiting.
      */
     public void run(){
 
-        // Error handling
+        // Error handling; it appears that ThreadOS has issues if you call exit() from within a constructor
+        // so we bank the instantiation-time errors until this thread begins running, and then immediately exit out.
         switch(this.instError) {
             case 0: break;
             case 1: {
@@ -488,6 +560,7 @@ class Test4 extends Thread {
 
         // Choose which test suite to run based on the second parameter passed to the constructor
         switch(this.suite) {
+            // Unit Tests, not for "production".
             case 0: {
                 int count = 0;
 
@@ -525,11 +598,12 @@ class Test4 extends Thread {
                 break;
 
             }
+            // Random access
             case 1: {
 
                 SysLib.cout("SUITE 1: Random Read/Write Test \n");
                 Object [] results = testRandomAccess();
-                long elapsed = (long)results[1] - (long)results[0];
+                long elapsed = ((long)results[1] - (long)results[0])/1000000;
 
                 SysLib.cout(String.format("All operations completed successfully: %s\n", (boolean)results[2]));
 
@@ -541,10 +615,11 @@ class Test4 extends Thread {
 
                 break;
             }
+            // Fully localized (10 contiguous blocks) access
             case 2: {
                 SysLib.cout("SUITE 2: localized writes + reads in blocks of 10 writes + 10 reads\n");
                 Object [] results = testLocalizedAccess();
-                long elapsed = (long)results[1] - (long)results[0];
+                long elapsed = ((long)results[1] - (long)results[0])/1000000;
 
                 SysLib.cout(String.format("All operations completed successfully: %s\n", (boolean)results[2]));
 
@@ -556,10 +631,11 @@ class Test4 extends Thread {
 
                 break;
             }
+            // Mixed access, with 90% of access localized and 10% randomized
             case 3: {
                 SysLib.cout("SUITE 3: Mixed Access: 90% localized, 10% random\n");
                 Object [] results = testMixedAccess();
-                long elapsed = (long)results[1] - (long)results[0];
+                long elapsed = ((long)results[1] - (long)results[0])/1000000;
 
                 SysLib.cout(String.format("All operations completed successfully: %s\n", (boolean)results[2]));
 
@@ -571,10 +647,12 @@ class Test4 extends Thread {
 
                 break;
             }
+            // Adversarial access: each successive access hits a different block on a different randomly-selected
+            // *track*, to (nominally) exercise head movement in the Disk class.
             case 4: {
                 SysLib.cout("SUITE 4: Adversarial Access\n");
                 Object [] results = testAdversarialAccess();
-                long elapsed = (long)results[1] - (long)results[0];
+                long elapsed = ((long)results[1] - (long)results[0])/1000000;
 
                 SysLib.cout(String.format("All operations completed successfully: %s\n", (boolean)results[2]));
 
@@ -586,7 +664,8 @@ class Test4 extends Thread {
 
                 break;
             }
-            // Specialized tests to validate Enhanced Second Chance algorithm
+            // Specialized tests to validate Enhanced Second Chance algorithm; requires uncommenting some
+            // SysLib.cerr lines in Cache.java to utilize.
             case 5: {
                 int count = 0;
 

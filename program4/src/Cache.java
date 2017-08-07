@@ -11,6 +11,7 @@ public class Cache {
 
     private final int cacheSize;
     private final int bSize;
+    private boolean free = true;
 
     private CacheEntry[] cacheTable = null;
 
@@ -38,13 +39,21 @@ public class Cache {
 
         int free = -1;
 
+        // Guard to avoid traversing the whole cache table after all free blocks have been consumed
+        if(!this.free)
+            return free;
+
         for (int i = 0; i < cacheSize; ++i){
             if(cacheTable[i].block == -1){
+                this.free = true;
                 free = i;
 //                SysLib.cerr(String.format("<< findFreePage() >> : found free page at %d %n", free));
                 break;
             }
         }
+
+        // If we got through all blocks without finding a free one, mark this fact.
+        this.free = (free != -1);
 
         return free;
     }
@@ -103,7 +112,7 @@ public class Cache {
                                 }
 //                                SysLib.cerr("<< nextVictim() >> : case 0b01\n");
                                 break;
-                    case 0b10:
+                    case 0b10: // This is only separated from case 0b11 for instrumentation purposes
                                 if(lastBest > bitmap) {
                                     lastBest = bitmap;
                                     index = i;
@@ -302,6 +311,9 @@ public class Cache {
         for (int i = 0; i < cacheSize; ++i){
             cacheTable[i] = new CacheEntry(bSize);
         }
+
+        // Now all blocks are free ("invalid") again
+        this.free = true;
     }
 
     /**

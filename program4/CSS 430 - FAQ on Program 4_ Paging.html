@@ -1,0 +1,267 @@
+
+<!-- saved from url=(0056)http://courses.washington.edu/css430/prog/prog4_faq.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>CSS 430 - FAQ on Program 4: Paging</title>
+</head>
+
+<body bgcolor="#fffff0">
+
+<p align="center">
+<font size="+3"><b>CSS 430</b><br>
+<b>FAQ on Program 4: Paging</b></font><br>
+<b>Instructor: Munehiro Fukuda</b><br>
+</p><hr>
+
+
+
+<h4>Q1: Which version of Kernel.java should I use?</h4>
+
+<h4>A: If you're usin the copy of ThreadOS in the Linux lab, then download kernel_org.java or a new version of Kernel.java.</h4>
+
+Download Kernel_org.java or a new version of Kernel.java, both of
+which include a correct implementation of EXEC, EXIT, and WAIT. You
+can download them from uw1-320 machines.
+
+<h4>Q2: Is Cache.class a thread?</h4>
+
+<h4>A: No, it is an ordinary Java class. Kernel instantiates one
+Cache.class.</h4>
+
+Kernel.java creates an instance of your Cache.java as an ordinary
+Java object but not a thread.
+<pre>     cache = new Cache( disk.blockSize, 10 );
+</pre>
+
+It gets to know that the disk block size is 512 bytes and the number
+of cached blocks is 10. As you see Kernel.java, Kernel calls read,
+write, sync, and flush methods of cache according to each request.
+
+<pre> 
+case CREAD: // to be implemented in assignment 4 return
+    cache.read( param, ( byte[] )args ) ? OK : ERROR; 
+</pre>
+
+Where param is a block number. What your Cache.java has to do is if
+such a block is cached in Cache.java, it will copy the contents to
+args upon a read( ) call, and will copy the contents of args to this
+cached block upon a write( ) call.
+
+<h4>Q3: How can I find which blocks are cached in Cache.java?</h4>
+
+<h4>A: You should maintain an array or a Vector of 10 elements, each
+including:</h4>
+<pre>   frame field:   a cached block number
+                  initialized to -1 (this means this frame is invalid.)
+   reference bit: set whenever this block is accessed and reset by
+                  a second-chance algorithm
+   dirty bit:     set whenever a write request occurs and reset when
+                  this block is written back to the disk
+</pre>
+
+<h4>Q4: What is the sequence of a cache read?</h4>
+
+<h4>A: Here is a big hint:</h4>
+<pre>    - When a read( ) is called, first go through the array or the
+      Vector of 10 elements, each including a different cache block and
+      its block information, (i.e., frame#, reference and dirty bits.)
+    - If you find the corresponding block, (i.e., if the read( )'s first
+      argument matches the frame # of one of those elements,) simply
+      copies this element's data to the 2nd argument. The reference bit
+      is set, too. That's it.
+    - If you don't find the corresponding block, now you have to find
+      out an invalid element whose frame# is -1.
+    - If you don't find any invalid elements, then, you have to chose
+      a victim according to the 2nd-chance algorithm.
+    - If it is a victim and its dirty bit is 1, then, write back this
+      contents to the disk using disk.write( ). The dirty bit is reset.
+    - Now, you have to read the corresponding disk block from disk into
+      this freed element. Then, update this element's frame# with this
+      disk block#. The reference bit is set.
+    - Finally, copies this contents to the 2nd argument. That's it.
+</pre>
+
+<h4>Q4.1: What is the difference between SysLib.rawwrite() and the disk.write() 
+that was mentioned in the previous question?</h4>
+
+<h4>A: </h4>
+<p> That's a good question. Let's instead approach this the way we might if we had to do this work 
+		professionally and yet the original author was unavailable (on vacation, 
+		left the company, etc, etc).</p>
+<p>What source code can you dig through in order to try and figure out how they 
+	differ / how they're similar?&nbsp; Can you figure out what each one does in 
+	order to compare them?&nbsp;&nbsp; Do you need to fully understand each one? (And if 
+	you don't, how can you figure out what the differences are?</p>
+<p>As a hint - there's a copy of various .Java files for ThreadOS in the Linux 
+Lab.&nbsp; Grab that, and then start digging through there to see what you can find.</p>
+
+<h4>Q5: What is the sequence of the write?</h4>
+
+<h4>A: Think about it by yourself!</h4>
+
+<h4>Q6: What is the sequence of sync?</h4>
+
+<h4>A: Write back all cached block to the disk. Clear a dirty bit. But
+do not invalidate them.</h4>
+
+<h4>Q7: What is the sequence of flush?</h4>
+
+<h4>A: Write back all cached block to the disk. Clear both dirty and
+reference bit. Invalidate all the cached blocks.</h4>
+
+<h4>Q8: How should I check if my Cache is working</h4>
+
+<h4>A; For all of the test, write meaningless data to the disk or the
+cache and then compare what is on the disk or the cache to what I
+just wrote.</h4>
+
+<h4>Q9: How can I generate random accesses?</h4>
+
+<h4>A: Use the Random class.</h4> 
+
+It generates a new random number by nextInt( ), which however can be a
+negative integer. Use Math.abs( ) to get a positive integer and then
+round it up using "% 512".
+
+<h4>Q10: How can I round up using "% 512" or "% 10"?</h4>
+
+<h4>A: See below:</h4>
+<pre>    import java.util.*;
+
+    Random r = new Random( );
+    Math.abs( r.nextInt( ) ) % 512;
+</pre>
+
+<h4>Q11: How can I generate localized accesses?</h4>
+
+<h4>A: You may just access only 10 blocks repeatedly.</h4>
+
+Perform the following steps:
+<pre>1.  Create a byte array of 512 elements and fill it with meaningless data.
+    This array acts as a block of data.
+2.  Write the block of data created in step 1 to several blockIds that
+    are close together.
+3.  Read the same blocks that were just written to to see if their
+    contents are the same as the byte array created in step1.
+</pre>
+
+<h4>Q12: How can I generate mixed accesses?</h4>
+
+<h4>A: Use the Random class. Round it up using "% 10". If it is 0 to
+8, you should go to localized accesses. If it is 9, you should go to
+random accesses.</h4>
+
+<h4>Q13: How can I generate adversary accesses?</h4>
+
+<h4>A: Generate access patterns, each causes a cache miss.</h4>
+
+This means that you have to choose a block number which has not been
+chosen in the last 10 accesses. Also try to think about a very
+pathetic situation where each access moves a disk head a lot for
+example from track 0 to track 9. Note that blocks 0 to 99 belong
+to track 0, blocks 100 to 199 belong to track 1, and so on.
+
+<h4>Q14: My adversary accesses ran a bit faster than the random accesses.
+What's wrong?</h4>
+
+<h4>A: Your adversary accesses didn't move a disk head frequently.</h4>
+
+See the answer to Q13.
+
+<h4>Q15: How many time should I call cread( ) and cwrite( ) in total.</h4>
+
+<h4>A: 200 creads and 200 cwrites for each test may be enough to see
+differences between cache enabled and disabled.</h4>
+
+<h4>Q16: Should we track the amount of time each write takes and sum
+them together? Then do this again for the reads?  Or can we just give
+the total amount of time it took to complete both the reads/writes?</h4>
+
+<h4>A: What you can do is:</h4>
+
+measure the total amount of time elapsed for for 200 writes and for
+200 reads, and calculate the average time for a write and for a write
+by dividing the measured time by 200.
+
+<h4>Q17: Why do we need csync?</h4>
+
+<h4>A: Test4.java should call csync at its very end.</h4>
+
+Your disk operation may remain in your Cache.java but not be yet
+reflected to Disk.java even after you get finished with
+Test4.java. Test4.java should call csync at its very end.
+
+<h4>Q18: Why do we need cflush?</h4>
+
+<h4>A: Every time you start a new test, you have to flush out cached
+block.</h4>
+
+If you conduct another test before stopping ThreadOS, your Cache may
+still cache some Disk blocks. This is unfair for the following
+tests. Thus, every time you start a new test, you have to flush out
+cached block.
+
+<h4>Q19: Should write( ) and read( ) in Cache.java be synchronized?</h4>
+
+<h4>A: Yes.</h4>
+
+<h4>Q20: If each method in Cache.java use "synchronized", there appear
+some drawback.</h4>
+
+Using a "synchronized" method, only one thread could be active in the
+Cache at a time. This would be bad when the Cache has to read from the
+disk itself, which could take a long time, the running thread would be
+put to sleep, letting other threads execute, but they wouldn't be able
+to read or write because the lock would still be held.
+
+<h4>A: You're right.</h4>
+
+Although this synchronization deteriorate the performance, the effect
+of cache hits will beat such synchronization drawback. Thus, in total,
+performance will be improved.
+
+<h4>Q21: Should I run Test4.java from the shell?</h4>
+<h4>A: You don't have to. You may run your Test4.java from the loader.</h4>
+<pre>% java Boot
+--&gt;l Test4 arg0 arg1
+</pre>
+
+<h4>Q22: I'm running into a methodNotFound exception when I run Test4,
+any ideas?</h4>
+
+<pre>public class TestThread4 extends Thread
+{
+    ...
+    private byte[]  buffer = new byte[512];
+
+    public void TestThread4(String args[])
+    {
+       ...
+</pre>
+
+<h4>A: The constructor should not return any value.</h4>
+Your TestThread4 construct should be:
+<pre>    public TestThread4( ) or
+    public TestThread4( String args[] )
+</pre>
+
+<h4>Q23: Why cannot my buffer be passed to SysLib.cwrite( )</h4>
+
+<pre>     byte [] buffer = new byte[512];
+     String str;
+     str = "Block Number " + block+"\n";
+     buffer = str.getBytes();
+     SysLib.rawwrite(block,buffer);
+</pre>
+
+<h4>A: Your buffer[] has been corrupted before passed to SysLib.write
+( ).</h4>
+
+Be reminded that a Java assignment only substitutes the left-hand-side
+variable with a pointer to the right-hand-side variable. In the above
+example, buffer was originally assigned a 512-byte data but was
+substituted with a pointer to the str variable whose size is much less
+than 512 bytes.
+
+
+
+</body></html>
