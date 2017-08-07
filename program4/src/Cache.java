@@ -41,6 +41,7 @@ public class Cache {
         for (int i = 0; i < cacheSize; ++i){
             if(cacheTable[i].block == -1){
                 free = i;
+//                SysLib.cerr(String.format("<< findFreePage() >> : found free page at %d %n", free));
                 break;
             }
         }
@@ -90,21 +91,31 @@ public class Cache {
             for (int i = 0; i < cacheSize; ++i){
                 current = cacheTable[i];
                 bitmap = (current.refbit ? 0b00000010 : 0b00000000);
-                bitmap = bitmap & (current.dirtybit ? 0b00000001 : 0b00000000);
+                bitmap = bitmap | (current.dirtybit ? 0b00000001 : 0b00000000);
 
                 switch (bitmap) {
                     case 0b00:  index = i;
+//                                SysLib.cerr("<< nextVictim() >> : case 0b00\n");
                                 return index; // Return as soon as we find a 00 entry
                     case 0b01:  if(lastBest > bitmap) {
                                     lastBest = bitmap;
                                     index = i;
                                 }
+//                                SysLib.cerr("<< nextVictim() >> : case 0b01\n");
                                 break;
                     case 0b10:
+                                if(lastBest > bitmap) {
+                                    lastBest = bitmap;
+                                    index = i;
+                                }
+//                                SysLib.cerr("<< nextVictim() >> : case 0b10\n");
+                                current.refbit = false;
+                                break;
                     case 0b11:  if(lastBest > bitmap) {
                                     lastBest = bitmap;
                                     index = i;
                                 }
+//                                SysLib.cerr("<< nextVictim() >> : case 0b11\n");
                                 current.refbit = false;
                                 break;
                 }
@@ -154,7 +165,9 @@ public class Cache {
             // If the block was in the cache, copy it into the buffer and update the reference bit of that
             // cache block.
             if (cacheTable[i].block == blockId){
-                //SysLib.cout(String.format("<< CACHE >> read: found cached at index %d", i));
+//                SysLib.cerr("<< Cache hit on read >> \n");
+
+                //SysLib.cerr(String.format("<< CACHE >> read: found cached at index %d", i));
                 System.arraycopy(cacheTable[i].data, 0, buffer, 0, 512);
                 cacheTable[i].refbit = true;
                 read = true;
@@ -195,6 +208,7 @@ public class Cache {
                 System.arraycopy(cacheTable[victimId].data, 0, buffer, 0, 512);
                 //buffer = cacheTable[victimId].data.clone();
             }
+            cacheTable[victimId].block = blockId;
             cacheTable[victimId].refbit = true;
         }
 
@@ -223,9 +237,13 @@ public class Cache {
         // Check if the requested block is in the cache
         for (int i = 0; i < this.cacheSize; ++i){
 
+
             // If the block was in the cache, copy the buffer into it and update the reference and dirty bits of that
             // cache block.
             if (cacheTable[i].block == blockId){
+
+//                SysLib.cerr("<< Cache hit on write >> \n");
+
                 index = i;
                 break;
             }
