@@ -1,0 +1,85 @@
+threadOS ver 1.0:
+Type ? for help
+threadOS: a new thread (thread=Thread[Thread-3,5,main] tid=0 pid=-1)
+-->l Test4 enabled 0
+l Test4 enabled 0
+Test 1: OOB read calls fail: PASS
+threadOS: a new thread (thread=Thread[Thread-5,5,main] tid=1 pid=0)
+Test 2: Read from Block 0 succeeds: PASS
+Test 3: Read from Block 999 succeeds: PASS
+Test 4: Write to Block 0 succeeds: PASS
+Test 5: Write to Block 999 succeeds: PASS
+Average read speed: 63.155000 
+Average write speed: 61.435000 
+Test 6: read and write 200 random blocks: PASS
+TOTAL FAILURES: 0
+-->l Test4 disabled 0
+l Test4 disabled 0
+threadOS: a new thread (thread=Thread[Thread-7,5,main] tid=2 pid=0)
+Test 1: OOB read calls fail: FAIL
+Test 2: Read from Block 0 succeeds: PASS
+Test 3: Read from Block 999 succeeds: PASS
+Test 4: Write to Block 0 succeeds: PASS
+Test 5: Write to Block 999 succeeds: PASS
+Average read speed: 53.055000 
+Average write speed: 52.980000 
+Test 6: read and write 200 random blocks: PASS
+TOTAL FAILURES: 1
+-->l Test4 enabled 1
+l Test4 enabled 1
+SUITE 1: Random Read/Write Test 
+threadOS: a new thread (thread=Thread[Thread-9,5,main] tid=3 pid=0)
+All operations completed successfully: true
+Total runtime: 21555 ms
+Average time per read/write cycle: 107.775000 ms
+-->l Test4 disabled 1
+l Test4 disabled 1
+SUITE 1: Random Read/Write Test 
+threadOS: a new thread (thread=Thread[Thread-11,5,main] tid=4 pid=0)
+All operations completed successfully: true
+Total runtime: 21577 ms
+Average time per read/write cycle: 107.885000 ms
+-->l Test4 enabled 2
+threadOS: a new thread (thread=Thread[Thread-13,5,main] tid=5 pid=0)
+l Test4 enabled 2
+SUITE 2: localized writes + reads in blocks of 10 writes + 10 reads
+All operations completed successfully: true
+Total runtime: 7 ms
+Average time per 10x write + 10x read cycle: 0.035000 ms
+-->l Test4 disabled 2l
+threadOS: a new thread (thread=Thread[Thread-15,5,main] tid=6 pid=0)
+l Test4 disabled 2
+SUITE 2: localized writes + reads in blocks of 10 writes + 10 reads
+All operations completed successfully: true
+Total runtime: 83374 ms
+Average time per 10x write + 10x read cycle: 416.870000 ms
+--> Test4 enabled 3
+ Test4 enabled 3
+-->l Test4 enabled 3
+l Test4 enabled 3
+threadOS: a new thread (thread=Thread[Thread-17,5,main] tid=7 pid=0)
+SUITE 3: Mixed Access: 90% localized, 10% random
+All operations completed successfully: true
+Total runtime: 3966 ms
+Average time per 10x write + 10x read cycle: 19.830000 ms
+l Test4 disabled 3
+threadOS: a new thread (thread=Thread[Thread-5,5,main] tid=1 pid=0)
+SUITE 3: Mixed Access: 90% localized, 10% random
+All operations completed successfully: true
+Total runtime: 114613 ms
+Average time per 10x write + 10x read cycle: 573.065000 ms
+-->l Test4 enabled 4
+l Test4 enabled 4
+threadOS: a new thread (thread=Thread[Thread-7,5,main] tid=2 pid=0)
+SUITE 4: Adversarial Access
+All operations completed successfully: true
+Total runtime: 22317 ms
+Average time per write/read pair: 111.585000 ms
+-->l Test4 disabled 4
+threadOS: a new thread (thread=Thread[Thread-9,5,main] tid=3 pid=0)
+l Test4 disabled 4
+SUITE 4: Adversarial Access
+All operations completed successfully: true
+Total runtime: 22131 ms
+Average time per write/read pair: 110.655000 ms
+
