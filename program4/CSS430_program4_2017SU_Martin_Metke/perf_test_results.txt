@@ -1,0 +1,60 @@
+-->l Test4 disabled 1
+l Test4 disabled 1
+threadOS: a new thread (thread=Thread[Thread-25,5,main] tid=11 pid=0)
+SUITE 1: Random Read/Write Test 
+All operations completed successfully: true
+Total runtime: 22291 ms
+Average time per read/write cycle: 111.455000 ms
+-->l Test4 enabled 1
+l Test4 enabled 1
+threadOS: a new thread (thread=Thread[Thread-27,5,main] tid=12 pid=0)
+SUITE 1: Random Read/Write Test 
+All operations completed successfully: true
+Total runtime: 21204 ms
+Average time per read/write cycle: 106.020000 ms
+-->l Test4 disabled 2
+l Test4 disabled 2
+threadOS: a new thread (thread=Thread[Thread-29,5,main] tid=13 pid=0)
+SUITE 2: localized writes + reads in blocks of 10 writes + 10 reads
+All operations completed successfully: true
+Total runtime: 82792 ms
+Average time per 10x write + 10x read cycle: 413.960000 ms
+-->l Test4 enabled 2
+l Test4 enabled 2
+threadOS: a new thread (thread=Thread[Thread-31,5,main] tid=14 pid=0)
+SUITE 2: localized writes + reads in blocks of 10 writes + 10 reads
+All operations completed successfully: true
+Total runtime: 1 ms
+Average time per 10x write + 10x read cycle: 0.005000 ms
+-->l Test4 disabled 3
+l Test4 disabled 3
+threadOS: a new thread (thread=Thread[Thread-33,5,main] tid=15 pid=0)
+SUITE 3: Mixed Access: 90% localized, 10% random
+All operations completed successfully: true
+Total runtime: 82507 ms
+Average time per 10x write + 10x read cycle: 412.535000 ms
+-->l Test4 enabled 3
+l Test4 enabled 3
+threadOS: a new thread (thread=Thread[Thread-35,5,main] tid=16 pid=0)
+SUITE 3: Mixed Access: 90% localized, 10% random
+All operations completed successfully: true
+Total runtime: 2 ms
+Average time per 10x write + 10x read cycle: 0.010000 ms
+-->l Test4 disabled 4
+l Test4 disabled 4
+threadOS: a new thread (thread=Thread[Thread-37,5,main] tid=17 pid=0)
+SUITE 4: Adversarial Access
+All operations completed successfully: true
+Total runtime: 23373 ms
+Average time per write/read pair: 116.865000 ms
+-->l Test4 enabled 4
+l Test4 enabled 4
+threadOS: a new thread (thread=Thread[Thread-39,5,main] tid=18 pid=0)
+SUITE 4: Adversarial Access
+All operations completed successfully: true
+Total runtime: 22530 ms
+Average time per write/read pair: 112.650000 ms
+-->q
+q
+
+Process finished with exit code 1
