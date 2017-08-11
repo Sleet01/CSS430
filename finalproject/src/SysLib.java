@@ -115,4 +115,8 @@ public class SysLib {
 	        ((b[offset+2] & 0xff) << 8) + (b[offset+3] & 0xff);
 	return n;
     }
+
+    public static int format(int var0) {
+        return Kernel.interrupt(1, 18, var0, (Object)null);
+    }
 }

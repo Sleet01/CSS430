@@ -3,8 +3,8 @@ class Superblock {
    public int totalInodes; // the number of inodes
    public int freeList;    // the block number of the free list's head
    
-   public SuperBlock( int diskSize ) {
-	...
+   public Superblock( int diskSize ) {
+       this.totalBlocks = diskSize;
+
    }
-   ...	
 }

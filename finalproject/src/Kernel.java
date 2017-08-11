@@ -61,6 +61,9 @@ public class Kernel
     private static BufferedReader input
 	= new BufferedReader( new InputStreamReader( System.in ) );
 
+    // FileSystem instance for Final Project
+    private static FileSystem fs;
+
     // The heart of Kernel
     public static int interrupt( int irq, int cmd, int param, Object args ) {
 	TCB myTcb;
