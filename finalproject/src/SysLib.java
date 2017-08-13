@@ -116,7 +116,138 @@ public class SysLib {
 	return n;
     }
 
-    public static int format(int var0) {
-        return Kernel.interrupt(1, 18, var0, (Object)null);
+    public static int open(String fname, String mode) {
+        String[] args = new String[]{fname, mode};
+        return Kernel.interrupt(1, 14, 0, args);
+    }
+
+    public static int close( int fd) {
+        return Kernel.interrupt(1, 15, fd, null);
+    }
+
+    public static int read(int fd, byte[] buffer) {
+        return Kernel.interrupt(1, 8, fd, buffer);
+    }
+
+    public static int write(int fd, byte[] buffer) {
+        return Kernel.interrupt(1, 9, fd, buffer);
+    }
+
+    public static int seek(int fd, int offset, int whence) {
+        int[]  args = new int[]{offset, whence};
+        return Kernel.interrupt(1, 17, fd, args);
+    }
+
+    public static int fsize(int fd) {
+        return Kernel.interrupt(1, 16, fd, null);
+    }
+
+    public static int delete(String fname) {
+        return Kernel.interrupt(1, 19, 0, fname);
+    }
+
+    public static int format( int files ) {
+        return Kernel.interrupt(1, 18, files, null);
+    }
+
+    // Given a disk block #, an offset within the block, and a array of field sizes,
+    // reads the data back from the block and converts it to an ArrayList of properly-formatted objects
+    public static List<Object> disk2List(short block, int offset, int[] sizes) {
+        // Initial values will be null, so no need to intialize
+        List<Object> values = new ArrayList<Object>(sizes.length);
+        // Keep cursor within block
+        int cursor;
+
+        // If the block or offset are invalid, return a list of just null values.
+        if ((block < 0 || block >= 1000) || (offset < 0 || offset >= 512)) {
+            return values;
+        } else { // If valid, extract
+            cursor = offset;
+
+            byte[] buffer = new byte[512];
+            rawread(block, buffer);
+
+            // Attempt to fill in the object list "values" with sets of data from the selected block
+            try {
+                for(int i = 0; i < sizes.length; ++i){
+                    // Depending on what size each field is, load a different number of bytes into
+                    // the corresponding values field.
+                    switch(sizes[i]){
+                        case 4: values.set(i, bytes2int(buffer, cursor));
+                                cursor += 4;
+                                break;
+                        case 2: values.set(i, bytes2short(buffer, cursor));
+                                cursor += 2;
+                                break;
+                        case 1: values.set(i, buffer[cursor]);
+                                cursor++;
+                                break;
+                        default:
+                                // No defined behavior for any other field size.
+                                break;
+                    }
+                    // If the selected sizes have somehow put the cursor outside of the block,
+                    // discontinue reading fields and return what's been read.
+                    if(cursor >= 512){
+                        break;
+                    }
+                }
+            }
+            catch (IndexOutOfBoundsException e){
+                cerr(e.toString());
+            }
+            return values;
+        }
+    }
+
+    // Given a list of Objects, a list of field sizes, and a block and offset within the block, attempts
+    // to write the data back to disk.
+    public static int list2Disk(List<Object> fields, int[] sizes, short block, int offset){
+        int retval;
+        byte[] buffer = new byte[512];
+        int cursor;
+
+        // If block or offset data is out of range, or fields' size doesn't equal sizes.length, return an error
+        if ((block < 0 || block >= 1000) || (offset < 0 || offset >= 512) || (fields.size() != sizes.length)) {
+            retval = Kernel.ERROR;
+        } else { // If valid, read in the specified block, then update the correct number of bytes and write back
+            cursor = offset;
+            retval = rawread(block, buffer);
+
+            if (retval != Kernel.ERROR) {
+                try {
+                    for (int i = 0; i < sizes.length; ++i) {
+                        switch (sizes[i]) {
+                            case 4:
+                                int2bytes((int) fields.get(i), buffer, cursor);
+                                cursor += 4;
+                                break;
+                            case 2:
+                                short2bytes((short) fields.get(i), buffer, cursor);
+                                cursor += 2;
+                                break;
+                            case 1:
+                                buffer[cursor] = (byte) fields.get(i);
+                                cursor++;
+                                break;
+                            default:    // Behavior undefined for any other sizes
+                                break;
+                        }
+                        // If the selected sizes have somehow put the cursor outside of the block,
+                        // discontinue reading fields and return what's been read.
+                        if (cursor >= 512) {
+                            break;
+                        }
+
+                    }
+                }
+                catch (IndexOutOfBoundsException e){
+                    cerr(e.toString());
+                }
+                retval = Kernel.interrupt( Kernel.INTERRUPT_SOFTWARE,
+                        Kernel.RAWWRITE, block, buffer );
+            }
+        }
+        return retval;
     }
 }
