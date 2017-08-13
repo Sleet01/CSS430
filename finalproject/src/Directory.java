@@ -1,9 +1,12 @@
+import java.util.concurrent.ConcurrentHashMap;
+
 public class Directory {
    private static int maxChars = 30; // max characters of each file name
 
-   // Directory entries
-   private int fnsizes[];        // each element stores a different file name size.
-   private char fnames[][];    // each element stores a different file name.
+    // Directory entries
+    private int fnsizes[];        // each element stores a different file name size.
+    private char fnames[][];    // each element stores a different file name.
+    private ConcurrentHashMap map;
 
    public Directory( int maxInumber ) { // directory constructor
       fnsizes = new int[maxInumber];     // maxInumber = max files
@@ -13,6 +16,10 @@ public class Directory {
       String root = "/";                // entry(inode) 0 is "/"
       fnsizes[0] = root.length( );        // fnsizes[0] is the size of "/".
       root.getChars( 0, fnsizes[0], fnames[0], 0 ); // fnames[0] includes "/"
+
+       // Set mapping for root "/" value
+       map = new ConcurrentHashMap(maxInumber);
+       map.put(root, (short)0);
    }
 
    public int bytes2directory( byte data[] ) {
@@ -41,8 +48,16 @@ public class Directory {
       return false;
    }
 
-   public short namei( String filename ) {
-      // returns the inumber corresponding to this filename
-      return 0;
-   }
+    // returns the inumber corresponding to this filename
+    public short namei( String filename ) {
+        short inumber;
+        if(map.containsKey(filename)){
+            inumber = (short)map.get(filename);
+        }
+        else{
+            inumber = -1;
+        }
+
+        return inumber;
+    }
 }

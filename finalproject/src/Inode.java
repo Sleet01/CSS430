@@ -18,6 +18,10 @@ public class Inode {
             2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
     }; // This is the field size array for the indirect block, which is 256 shorts in 512 bytes
 
+    // Flag values
+    public final static short UNUSED =    0;
+    public final static short USED =      1;
+    public final static short DELETE =    2;
 
     public int length;                             // file size in bytes
     public short count;                            // # file-table entries pointing to this
@@ -28,7 +32,7 @@ public class Inode {
     public Inode( ) {                                     // a default constructor
         length = 0;
         count = 0;
-        flag = 1;
+        flag = USED;
         for ( int i = 0; i < directSize; i++ )
             direct[i] = -1;
         indirect = -1;
@@ -41,6 +45,7 @@ public class Inode {
         // Prep to load
         List<Object> fields = SysLib.disk2List(block, offset, fieldSizes);
 
+        // Try to read in fields
         if(fields.get(0) != null) { // read-in from disk has succeeded
             this.length = (int) fields.get(0);
             this.count = (short) fields.get(1);

@@ -15,7 +15,7 @@ public class FileSystem {
         directory = new Directory( superblock.totalInodes );
 
         // Link directory to new FileTable
-        filetable = new FileTable( directory );
+        filetable = new FileTable( directory, superblock.totalInodes );
 
         // Recreate the root entry if one exists
         FileTableEntry dirEnt = open( "/", "r");

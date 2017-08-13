@@ -16,6 +16,5 @@ public class FileTableEntry {          // Each table entry should have
         else if ( mode.compareTo( "w+" ) == 0){
             // Need to completely delete all data blocks within this file
         }
-
     }
 }
