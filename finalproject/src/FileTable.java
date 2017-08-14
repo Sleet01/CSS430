@@ -4,18 +4,16 @@ import java.util.Vector;
 
 public class FileTable {
 
-    private Vector table;         // the actual entity of this file table
+    private Vector<FileTableEntry> table;         // the actual entity of this file table
     private Directory dir;        // the root directory
-    private List inodes;   // Track all used Inodes, for updating purposes
-    private int nextFreeInode;  // Keep track of the next free Inode
+    private List<Inode> inodes;   // Track all used Inodes, for updating purposes
+
 
     public FileTable( Directory directory, int maxInodes ) { // constructor
-        table = new Vector( );     // instantiate a file (structure) table
-        dir = directory;           // receive a reference to the Director
+        table = new Vector<FileTableEntry>( );     // instantiate a file (structure) table
+        dir = directory;           // receive a reference to the Directory
                                    // from the file system
-        nextFreeInode = 1;          // directory always get Inode 0
-        inodes = new ArrayList<Inode>(maxInodes);   // ArrayList of inodes
-
+        inodes = new ArrayList<Inode>(maxInodes);   // ArrayList of used inodes
     }
 
     // major public methods
@@ -25,18 +23,47 @@ public class FileTable {
         // increment this inode's count
         // immediately write back this inode to the disk
         // return a reference to this file (structure) table entry
+        FileTableEntry newFTE;
         Inode inode;
+        short inumber = dir.namei(filename);
 
-        // Case 1: file exists on disk, somebody is accessing it
-        if(dir.namei(filename) != -1){
+        // Case 1 or 2: file exists on disk
+        if(inumber != -1){
 
+            // Create a new Inode based on this inumber, since we know the file should exist
+            // If there is no existing Inode in the inodes list, no other process is accesssing it
+            inode = new Inode(inumber);
+
+            // Check if this Inode is already in use
+            for (Inode i: inodes) {
+                if (i.equals(inode)) {
+                    inode = i;
+                    ++inode.count;
+                    break;
+                }
+            }
+            // Now we have an Inode instance and an inumber
+        } else {
+
+            // Case 3: file does not exist on disk, nobody is accessing it
+            inumber = dir.ialloc(filename);
+            inode = new Inode();
+
+            // Now we have an Inode instance and an inumber
         }
 
-        // Case 2: file exists on disk, but nobody is accessing it
+        // Create newFTE with inode and inumber we have gotten
+        newFTE = new FileTableEntry(inode, inumber, mode);
 
-        // Case 3: file does not exist on disk, nobody is accessing it
+        // Record new FTE and, if necessary, the inode
+        table.add(newFTE);
+        if(!inodes.contains(inode)){
+            inodes.add(inode);
+        }
+        // Write back inode
+        inode.toDisk(inumber);
 
-         return null;
+        return newFTE;
     }
 
    public synchronized boolean ffree( FileTableEntry e ) {
@@ -56,11 +83,11 @@ public class FileTable {
                // decrement the count of FTE references on the Inode
                --inode.count;
 
-               // If inode's count has reach 0 or below, mark it as unused
-               if(inode.count <= 0){
-                   inode.count = 0;
-                   inode.flag = (inode.flag == inode.DELETE) ? inode.DELETE : inode.UNUSED;
-               }
+//               // If inode's count has reach 0 or below, mark it as unused
+//               if(inode.count <= 0){
+//                   inode.count = 0;
+//                   inode.flag = (inode.flag == inode.DELETE) ? inode.DELETE : inode.UNUSED;
+//               }
 
                // Remove e from the table of used FTEs
                table.remove(e);

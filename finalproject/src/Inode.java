@@ -65,6 +65,34 @@ public class Inode {
         }
     }
 
+    @Override
+    public boolean equals(Object other){
+
+        // If identical objects, equal
+        if (other == this){
+            return true;
+        }
+
+        // If other is not an Inode, cannot be equal
+        if (!(other instanceof Inode)){
+            return false;
+        }
+
+        // Cast other to Inode for comparison
+        Inode o = (Inode)other;
+
+        // Assume true; "and" equality checks over all relevant fields
+        // Note: count and flag are not guaranteed to be identical, but if all
+        // fields are otherwise equal, o and this should be identical
+        boolean equal = true;
+        equal = equal & (o.length == this.length);
+        equal = equal & (o.indirect == this.indirect);
+        for (int i = 0; i < 11; ++i){
+            equal = equal & (o.direct[i] == this.direct[i]);
+        }
+        return equal;
+    }
+
     public int toDisk( short iNumber ) {                  // save to disk as the i-th inode
         short block = (short)(iNumber / 16); // block 0 if iNumber is 0-15, 1 if 16-31, etc.
         int offset = iNumber % 16;           // and the remainder shows the offset within the block
