@@ -33,7 +33,7 @@ public class Directory {
    public int bytes2directory( byte data[] ) {
       // assumes data[] received directory information from disk
       // initializes the Directory instance with this data[]
-       int success = -1;
+       int success = Kernel.ERROR;
 
        try{
            freeInodes = fnsizes.length;
@@ -75,6 +75,8 @@ public class Directory {
            // Return to the start of the index and find the first free (unused) inumber index.
            // This will be returned the next time ialloc() is called
            nextFreeInode = findNextFreeInode((short)0);
+
+           success = Kernel.OK;
 
        }
        catch (Exception e){

@@ -7,19 +7,18 @@ class Superblock {
     public int totalBlocks; // the number of disk blocks
     public int totalInodes; // the number of inodes
     public int freeList;    // the block number of the free list's head
-    public int freeCount;    // count of free blocks (as we know it)
 
 
     public Superblock( int diskSize ) {
         this.totalBlocks = diskSize;
         this.totalInodes = 64;
-        this.freeList = (this.totalInodes / 16) + 1; // First free block should be first block after Inodes
+        this.freeList = (int)Math.ceil(this.totalInodes / 16.0) + 1; // First free block should be first block after Inodes
     }
 
     public Superblock( int diskSize, int inodeCount ) {
         this.totalBlocks = diskSize;
         this.totalInodes = inodeCount;
-        this.freeList = (this.totalInodes / 16) + 1; // First free block should be first block after Inodes
+        this.freeList = (int)Math.ceil(this.totalInodes / 16.0) + 1; // First free block should be first block after Inodes
     }
 
     public Superblock( short block) {
