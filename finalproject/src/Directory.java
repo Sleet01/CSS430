@@ -1,4 +1,3 @@
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Directory {
@@ -9,7 +8,7 @@ public class Directory {
     // Directory entries
     private int fnsizes[];        // each element stores a different file name size.
     private char fnames[][];    // each element stores a different file name.
-    private ConcurrentHashMap map;
+    private ConcurrentHashMap map;  // Map each string filename to its inode number in O(1) lookup data type
 
     public Directory( int maxInumber ) { // directory constructor
 
@@ -34,24 +33,107 @@ public class Directory {
    public int bytes2directory( byte data[] ) {
       // assumes data[] received directory information from disk
       // initializes the Directory instance with this data[]
-       return -1;
+       int success = -1;
+
+       try{
+           freeInodes = fnsizes.length;
+
+           // Copy first (4 * maxInumber) = probably 256 bytes into fnsizes;
+           // this should work as this (the Directory instance) must have been instantiated with
+           // the correct number of Inodes... or else everything will break!
+           System.arraycopy(data, 0, fnsizes, 0, fnsizes.length);
+
+           // Create new temporary byte array to hold the remainder; this allows us to work
+           // without a nasty offset addition every iteration.
+           byte[] names = new byte[(data.length - fnsizes.length)];
+           System.arraycopy(data, fnsizes.length, names,0, names.length);
+
+           // track offset within names[] so that we can feed subsections to arraycopy simply
+           int offset = 0;
+           int length;
+           String name;
+
+           // Traverse fnsizes and extract appropriate strings (or nothing for zero length)
+           for(int i = 0; i < fnsizes.length; ++i){
+               if(fnsizes[i] != 0){
+
+                   // Read next filename size from fnsizes; read this into a string and then store that string
+                   // back in fnames at the appropriate inumber index.
+                   length = fnsizes[i];
+                   name = new String(names, offset, length);
+                   name.getChars(0, length, fnames[i], 0);
+                   map.put(name, i);
+
+                   // advance offset w/in names by the appropriate amount to reach the next stored filename
+                   // (ignores 0-length fnsizes because they don't actually matter)
+                   offset += length;
+
+                   // For every filename we find, there should be one fewer free inode on disk
+                   --freeInodes;
+               }
+           }
+           // Return to the start of the index and find the first free (unused) inumber index.
+           // This will be returned the next time ialloc() is called
+           nextFreeInode = findNextFreeInode((short)0);
+
+       }
+       catch (Exception e){
+           SysLib.cerr(e.toString());
+       }
+       return success;
    }
 
    public byte[] directory2bytes( ) {
       // converts and return Directory information into a plain byte array
       // this byte array will be written back to disk
-      // note: only meaningfull directory information should be converted
+      // note: only meaningful directory information should be converted
       // into bytes.
-      return null;
+       byte[] dirData;                      // byte array to store serialized directory information
+       int length = fnsizes.length * 4;     // At the very least, we need enough bytes to store fnsizes
+       int fnlength = length;               // We also want to keep the length of fnsizes handy for later
+       int offset = length;                 // filename section starts here, but we need to update offset on the fly
+
+
+       // Determine number of bytes needed for every directory entry that is used
+       // (making no assumptions about the root entry's composition at this point
+       for(int i = 0; i < fnsizes.length; ++i){
+           length += fnsizes[i];            // each fnsizes entry is that inode's associated filename's length in bytes
+       }
+       // Instantiate dirData, hopefully now large enough to store all entries
+       dirData = new byte[length];
+
+       try {
+           // copy in each fnsizes entry and its associated filename, if any
+           for (int i = 0; i < fnsizes.length; ++i) {
+
+               // int2bytes places the converted 4-byte rendition of the integer directly into our byte[]
+               SysLib.int2bytes(fnsizes[i], dirData, i * 4);
+
+               // Copy the recorded number of chars (bytes) into the filenames section starting at <offset>
+               // (should do nothing if the filename's length is 0
+               System.arraycopy(fnames[i], 0, dirData, offset, fnsizes[i]);
+
+               // Advance offset to the start of the next name (which may be 0 bytes away and 0 length, so
+               // it's based on the length read from fnsizes.
+               offset += fnsizes[i];
+           }
+       }
+       catch (IndexOutOfBoundsException e){
+           SysLib.cerr(e.toString());
+       }
+
+       return dirData;
    }
 
     public synchronized short ialloc( String filename ) {
         // filename is the one of a file to be created.
         // allocates a new inode number for this filename
         short inumber = -1;
+        // This works because we can't actually modify a parameter; instead we get a local copy
+        filename = filename.substring(0,maxChars);
 
         // Can only assign a new Inode if any are available
-        if(!(nextFreeInode == -1 || freeInodes == 0)) {
+        if(nextFreeInode != -1 && freeInodes >= 0) {
 
             // Only allow a new Inode allocation if the file doesn't already exist
             if (!map.containsKey(filename)) {
@@ -71,45 +153,79 @@ public class Directory {
 
     private short findNextFreeInode(short lastFree){
         short next = -1;
-        short state;
-        short offset = (short)(((lastFree + 1) * 32) % 512 ); // find next Inode's offset w/in block
-        short iblock = (short)(lastFree/16);                  // find next block to look in
-
         if(freeInodes > 0){
-            byte[] buffer = new byte[512];
-            SysLib.rawread(iblock, buffer);
-
-            // Loop through end of Inode-containing blocks to find the next unused block
-            short i = (short)(lastFree + 1);
-            while (i < fnames.length){
-
-                state = SysLib.bytes2short(buffer, offset + 6);
-                if(state == Inode.UNUSED){
-                    next = i;
+            for(int i = lastFree; i < fnsizes.length; ++i){
+                if(fnsizes[i] == 0){
+                    next = (short)i;
                     break;
                 }
-                else{
-                    ++i;
-                    offset = (short)(i * 32);
-                    if(offset >= 512){
-                        SysLib.rawread(++iblock, buffer);
-                        offset %= 512;      // Ensure offset is within one block
-                    }
-                }
+            }
+            if(next == -1){
+                freeInodes = 0;
             }
         }
         return next;
     }
 
+//    private short findNextFreeInode(short lastFree){
+//        short next = -1;
+//        short state;
+//        short offset = (short)(((lastFree + 1) * 32) % 512 ); // find next Inode's offset w/in block
+//        short iblock = (short)(lastFree/16);                  // find next block to look in
+//
+//        if(freeInodes > 0){
+//            byte[] buffer = new byte[512];
+//            SysLib.rawread(iblock, buffer);
+//
+//            // Loop through end of Inode-containing blocks to find the next unused block
+//            short i = (short)(lastFree + 1);
+//            while (i < fnames.length){
+//
+//                state = SysLib.bytes2short(buffer, offset + 6);
+//                if(state == Inode.UNUSED){
+//                    next = i;
+//                    break;
+//                }
+//                else{
+//                    ++i;
+//                    offset = (short)(i * 32);
+//                    if(offset >= 512){
+//                        SysLib.rawread(++iblock, buffer);
+//                        offset %= 512;      // Ensure offset is within one block
+//                    }
+//                }
+//            }
+//        }
+//        return next;
+//    }
+
    public synchronized boolean ifree( short iNumber ) {
       // deallocates this inumber (inode number)
       // the corresponding file will be deleted.
-      return false;
+       boolean found = false;
+
+       if(map.containsValue((short)iNumber) && fnsizes[iNumber] != 0){
+           found = true;
+
+           // Remove all information about this entry from Directory fields
+           String key = new String(fnames[iNumber]);
+           fnsizes[iNumber] = 0;
+           fnames[iNumber] = new char[0];
+           map.remove(key, iNumber);
+
+           if( (++freeInodes) > fnsizes.length)
+               freeInodes = fnsizes.length;
+           nextFreeInode = iNumber;
+       }
+
+       return found;
    }
 
     // returns the inumber corresponding to this filename
     public short namei( String filename ) {
         short inumber;
+        // This works because we can't actually modify a parameter; instead we get a local copy
+        filename = filename.substring(0,maxChars);
 
         // All filenames should be contained in the map, including the root "/" dir.
         if(map.containsKey(filename)){
