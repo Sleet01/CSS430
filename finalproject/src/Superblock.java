@@ -16,6 +16,12 @@ class Superblock {
         this.freeList = (this.totalInodes / 16) + 1; // First free block should be first block after Inodes
     }
 
+    public Superblock( int diskSize, int inodeCount ) {
+        this.totalBlocks = diskSize;
+        this.totalInodes = inodeCount;
+        this.freeList = (this.totalInodes / 16) + 1; // First free block should be first block after Inodes
+    }
+
     public Superblock( short block) {
         // Prep to load
         List<Object> fields = SysLib.disk2List(block, 0, fieldSizes);

@@ -33,7 +33,27 @@ public class FileSystem {
     }
 
     public boolean format( int files) {
-        return false;
+        boolean formatted = false;
+        try {
+            int diskBlocks = superblock.totalBlocks;
+
+            // Create default FS components
+            superblock = new Superblock(diskBlocks, files);
+            directory = new Directory(files);
+            filetable = new FileTable(directory, files);
+
+            // Write new superblock to disk
+            this.initializeSuperblock(superblock);
+            this.initializeDirectory(directory);
+            this.initializeInodes(files);
+            this.initializeData(directory, files, diskBlocks);
+
+        }
+        catch (Exception e){
+            SysLib.cerr(e.toString());
+        }
+
+        return formatted;
     }
 
     public FileTableEntry open( String filename, String mode){
