@@ -116,15 +116,16 @@ public class Disk extends Thread {
     }
 
     private void seek() {
-        /*
-        int var1 = 20 + 1 * Math.abs(this.targetBlockId / 10 - this.currentBlockId / 10);
+
+        //int var1 = 20 + 1 * Math.abs(this.targetBlockId / 10 - this.currentBlockId / 10);
+        int var1 = 1;
 
         try {
             Thread.sleep((long)var1);
         } catch (InterruptedException var3) {
             SysLib.cerr(var3.toString() + "\n");
         }
-        */
+
 
         this.currentBlockId = this.targetBlockId;
     }
