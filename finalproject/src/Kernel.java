@@ -183,7 +183,15 @@ public class Kernel
 		cache.flush( );
 		return OK;
 	    case OPEN:    // to be implemented in project
-		return OK;
+			int retval = ERROR;
+			if ( ( myTcb = scheduler.getMyTcb( ) ) != null ) {
+				String [] myArgs = (String [])args;
+			    FileTableEntry newFTE = fs.open( myArgs[0], myArgs[1] );
+				if((newFTE != null) && (myTcb.getFd(newFTE) != -1)){
+				    retval = OK;
+				}
+			}
+            return retval;
 	    case CLOSE:   // to be implemented in project
 		return OK;
 	    case SIZE:    // to be implemented in project

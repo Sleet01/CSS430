@@ -135,7 +135,7 @@ public class Directory {
         // allocates a new inode number for this filename
         short inumber = -1;
         // This works because we can't actually modify a parameter; instead we get a local copy
-        filename = filename.substring(0,maxChars);
+        filename = (filename.length() <= maxChars) ? filename : filename.substring(0,maxChars);
 
         // Can only assign a new Inode if any are available
         if(nextFreeInode != -1 && freeInodes >= 0) {
@@ -230,7 +230,7 @@ public class Directory {
     public short namei( String filename ) {
         short inumber;
         // This works because we can't actually modify a parameter; instead we get a local copy
-        filename = filename.substring(0,maxChars);
+        filename = (filename.length() <= maxChars) ? filename : filename.substring(0,maxChars);
 
         // All filenames should be contained in the map, including the root "/" dir.
         if(map.containsKey(filename)){

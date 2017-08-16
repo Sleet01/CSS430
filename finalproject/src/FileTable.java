@@ -23,7 +23,7 @@ public class FileTable {
         // increment this inode's count
         // immediately write back this inode to the disk
         // return a reference to this file (structure) table entry
-        FileTableEntry newFTE;
+        FileTableEntry newFTE = null;
         Inode inode;
         short inumber = dir.namei(filename);
 
@@ -52,16 +52,18 @@ public class FileTable {
             // Now we have an Inode instance and an inumber
         }
 
-        // Create newFTE with inode and inumber we have gotten
-        newFTE = new FileTableEntry(inode, inumber, mode);
+        if(inumber != -1) {
+            // Create newFTE with inode and inumber we have gotten
+            newFTE = new FileTableEntry(inode, inumber, mode);
 
-        // Record new FTE and, if necessary, the inode
-        table.add(newFTE);
-        if(!inodes.contains(inode)){
-            inodes.add(inode);
+            // Record new FTE and, if necessary, the inode
+            table.add(newFTE);
+            if (!inodes.contains(inode)) {
+                inodes.add(inode);
+            }
+            // Write back inode
+            inode.toDisk(inumber);
         }
-        // Write back inode
-        inode.toDisk(inumber);
 
         return newFTE;
     }
