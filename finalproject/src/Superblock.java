@@ -49,9 +49,9 @@ class Superblock {
 
     public int toDisk(){
         List<Object> fields = new ArrayList<Object>(fieldSizes.length);
-        fields.set(0, this.totalBlocks);
-        fields.set(1, this.totalInodes);
-        fields.set(2, this.freeList);
+        fields.add(0, this.totalBlocks);
+        fields.add(1, this.totalInodes);
+        fields.add(2, this.freeList);
 
         return SysLib.list2Disk(fields, fieldSizes, (short)0, 0);
     }

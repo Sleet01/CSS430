@@ -93,23 +93,23 @@ public class Inode {
         return equal;
     }
 
-    public int toDisk( short iNumber ) {                  // save to disk as the i-th inode
-        short block = (short)(iNumber / 16); // block 0 if iNumber is 0-15, 1 if 16-31, etc.
-        int offset = iNumber % 16;           // and the remainder shows the offset within the block
+    public int toDisk( short iNumber ) {            // save to disk as the i-th inode
+        short block = (short)(1 + (iNumber / 16));  // block 1 if iNumber is 0-15, 2 if 16-31, etc.
+        int offset = iNumber % 16;                  // and the remainder shows the offset within the block
 
         List<Object> fields = new ArrayList<Object>(fieldSizes.length);
 
         // Marshal fields into the list
-        fields.set(0, this.length);
-        fields.set(1, this.count);
-        fields.set(2, this.flag);
+        fields.add(0, this.length);
+        fields.add(1, this.count);
+        fields.add(2, this.flag);
         for (int i = 0; i < directSize; ++i){
-            fields.set(3 + i, this.direct[i]);
+            fields.add(3 + i, this.direct[i]);
         }
-        fields.set(fields.size() -1, this.indirect);
+        fields.add(fields.size() -1, this.indirect);
 
         // request write-back; this should only overwrite the bytes specific to this Inode
-        return SysLib.list2Disk(fields, fieldSizes, block, offset);
+        return SysLib.list2Disk(fields, fieldSizes, block, offset * iNodeSize);
     }
 
 }

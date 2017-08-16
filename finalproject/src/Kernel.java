@@ -82,6 +82,9 @@ public class Kernel
 		// instantiate a cache memory
 		cache = new Cache( disk.blockSize, 10 );
 
+		// Instantiate a new FileSystem
+		fs = new FileSystem( 1000 );
+
 		// instantiate synchronized queues
 		ioQueue = new SyncQueue( );
 		waitQueue = new SyncQueue( scheduler.getMaxThreads( ) );
@@ -187,8 +190,8 @@ public class Kernel
 		return OK;
 	    case SEEK:    // to be implemented in project
 		return OK;
-	    case FORMAT:  // to be implemented in project
-		return OK;
+	    case FORMAT:
+            return fs.format(param) ? OK : ERROR;
 	    case DELETE:  // to be implemented in project
 		return OK;
 	    }

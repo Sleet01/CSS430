@@ -173,13 +173,13 @@ public class SysLib {
                     // Depending on what size each field is, load a different number of bytes into
                     // the corresponding values field.
                     switch(sizes[i]){
-                        case 4: values.set(i, bytes2int(buffer, cursor));
+                        case 4: values.add(i, bytes2int(buffer, cursor));
                                 cursor += 4;
                                 break;
-                        case 2: values.set(i, bytes2short(buffer, cursor));
+                        case 2: values.add(i, bytes2short(buffer, cursor));
                                 cursor += 2;
                                 break;
-                        case 1: values.set(i, buffer[cursor]);
+                        case 1: values.add(i, buffer[cursor]);
                                 cursor++;
                                 break;
                         default:

@@ -113,7 +113,10 @@ public class Directory {
 
                // Copy the recorded number of chars (bytes) into the filenames section starting at <offset>
                // (should do nothing if the filename's length is 0
-               System.arraycopy(fnames[i], 0, dirData, offset, fnsizes[i]);
+               for(int j = 0; j < fnsizes[i]; ++j){
+                   dirData[offset+j] = (byte) fnames[i][j];
+               }
+               //System.arraycopy(fnames[i], 0, dirData, offset, fnsizes[i]);
 
                // Advance offset to the start of the next name (which may be 0 bytes away and 0 length, so
                // it's based on the length read from fnsizes.
