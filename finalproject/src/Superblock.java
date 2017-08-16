@@ -37,6 +37,16 @@ class Superblock {
         }
     }
 
+    public short getNextFree(){
+        int [] header = {2};
+        short next = (short)freeList;
+
+        short nextNext = (short)(SysLib.disk2List(next, 0, header)).get(0);
+        freeList = nextNext;
+
+        return next;
+    }
+
     public int toDisk(){
         List<Object> fields = new ArrayList<Object>(fieldSizes.length);
         fields.set(0, this.totalBlocks);

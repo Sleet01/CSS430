@@ -28,6 +28,7 @@ public class FileSystem {
         }
         close( dirEnt );
 
+        // calculate the total number of blocks available for data from the disk blocks and inode count
         dataBlockCount = (diskBlocks - (1 + (int)Math.ceil(superblock.totalInodes/16.0)));
     }
 
@@ -62,7 +63,7 @@ public class FileSystem {
             dirI.length = dirAsBytes.length;    // Total length of the initial dir, *should* be 256 + 1
 
             // Figure out how many data blocks, of both direct and indirect type, are needed
-            directCount = 1+ (dirI.length/512); // Total number of blocks needed
+            directCount = (int)Math.ceil(dirI.length/512); // Total number of blocks needed
             if(directCount > 11){
                 indirectCount = directCount - 11;
                 directCount = 11;
@@ -74,8 +75,7 @@ public class FileSystem {
             // in a free data block (and update the freeList)
             for(int i = 0; i < directCount; ++i){
                 // Assign next free block to this Inode
-                dirI.direct[i] = (short)superblock.freeList;                 // First data block
-                ++superblock.freeList;                                      // Increment freeList
+                dirI.direct[i] = superblock.getNextFree();
 
                 // Check remaining length of dirAsBytes to prevent underrun Exceptions
                 remLength = (dirI.length-(i*512) >= 512) ? 512 : dirI.length - (i * 512);
@@ -92,8 +92,7 @@ public class FileSystem {
             // B) Allocate a buffer to store entries for that indirect block
             // C) Allocate one (or more) data block numbers for the data blocks the indirect block points at
             if(indirectCount != 0){
-                dirI.indirect = (short)superblock.freeList; // Might want to make this a superblock method
-                ++superblock.freeList;                      // for consistency
+                dirI.indirect = superblock.getNextFree();
 
                 byte[] indirectBlock = new byte[512];       // Allocate a block to hold all indirect data blocks
 
@@ -102,8 +101,7 @@ public class FileSystem {
                 for(int j = 0; j < indirectCount; ++j){
 
                     // C) allocate another data block for the indirectly-pointed-to data
-                    nextDataBlock = (short)superblock.freeList;
-                    ++superblock.freeList;
+                    nextDataBlock = superblock.getNextFree();
 
                     // Load the new data block location into indirectBlock;
                     SysLib.short2bytes(nextDataBlock, indirectBlock, j*2);
@@ -111,7 +109,7 @@ public class FileSystem {
                     // We still need to track remaining length, keeping in mind that we've filled 11 blocks already
                     remLength = (dirI.length-(5632 + (j*512)) >= 512) ? 512 : dirI.length - (5632 + (j * 512));
 
-                    System.arraycopy(dirAsBytes, (5632+(j*512), buffer, 0, remLength));
+                    System.arraycopy(dirAsBytes, (5632+(j*512)), buffer, 0, remLength);
 
                     SysLib.rawwrite(nextDataBlock, buffer);
                 }
@@ -122,6 +120,7 @@ public class FileSystem {
             }
             // If we got this far, Directory is fully initialized
             initialized = true;
+            // write inode 0 back to disk
             dirI.toDisk((short)0);
         }
         catch (Exception e){
@@ -133,12 +132,43 @@ public class FileSystem {
 
     private synchronized boolean initializeInodes(int files){
         boolean initialized = false;
+        // create an Inode that can "stamp" values onto the remaining Inode positions after 0
+        Inode stamp = new Inode();
+        stamp.count = 0;
+        stamp.flag = Inode.UNUSED;
+
+        try {
+            // "Stamp" the default values onto every Inode# within the specified Inode blocks
+            // This is slow due to reading, adjusting and writing back the block once for each Inode.
+            for (short i = 1; i < superblock.totalInodes; ++i) {
+                stamp.toDisk(i);
+            }
+
+            initialized = true;
+        }
+        catch (Exception e){
+            SysLib.cerr(e.toString());
+        }
 
         return initialized;
     }
 
-    private synchronized boolean initializeData(Directory dir, int files, int diskBlocks){
+    private synchronized boolean initializeData( int files, int diskBlocks){
         boolean initialized = false;
+        byte [] buffer = new byte[512];
+
+        // Initialize every data block but the last with the block # of the *next* block
+        for(int i = 0; i < diskBlocks -1; ++i){
+
+            // Add the next block's block number to the beginning of this block
+            SysLib.short2bytes((short)(i+1), buffer, 0);
+            // Write new block to disk
+            SysLib.rawwrite((short)i, buffer);
+        }
+
+        // Last block (currently) has no successor
+        SysLib.short2bytes((short)(-1), buffer, 0);
+        SysLib.rawwrite((diskBlocks -1 ), buffer);
 
         return initialized;
 
@@ -155,10 +185,10 @@ public class FileSystem {
             filetable = new FileTable(directory, files);
 
             // Write new superblock to disk
+            formatted &= this.initializeData( files, diskBlocks );
             formatted &= this.initializeSuperblock(superblock);
             formatted &= this.initializeDirectory(directory);
             formatted &= this.initializeInodes(files);
-            formatted &= this.initializeData(directory, files, diskBlocks);
 
         }
         catch (Exception e){
