@@ -37,7 +37,7 @@ class Superblock {
         }
     }
 
-    public short getNextFree(){
+    public synchronized short getNextFree(){
         int [] header = {2};
         short next = (short)freeList;
 

@@ -188,8 +188,9 @@ public class Kernel
 			if ( ( myTcb = scheduler.getMyTcb( ) ) != null ) {
 				String [] myArgs = (String [])args;
 			    FileTableEntry newFTE = fs.open( myArgs[0], myArgs[1] );
-				if((newFTE != null) && (myTcb.getFd(newFTE) != -1)){
-				    retval = OK;
+			    int fdNum = myTcb.getFd(newFTE);
+				if((newFTE != null) && (fdNum != -1)){
+				    retval = fdNum;
 				}
 			}
             return retval;

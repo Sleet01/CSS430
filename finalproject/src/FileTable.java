@@ -31,10 +31,10 @@ public class FileTable {
         if(inumber != -1){
 
             // Create a new Inode based on this inumber, since we know the file should exist
-            // If there is no existing Inode in the inodes list, no other process is accesssing it
             inode = new Inode(inumber);
 
             // Check if this Inode is already in use
+            // If there is no existing Inode in the inodes list, no other process is accessing it
             for (Inode i: inodes) {
                 if (i.equals(inode)) {
                     inode = i;
@@ -46,13 +46,19 @@ public class FileTable {
         } else {
 
             // Case 3: file does not exist on disk, nobody is accessing it
-            inumber = dir.ialloc(filename);
+            // Only allowed if mode is not "r"
+            if(mode.compareTo("r") != 0) {
+                inumber = dir.ialloc(filename);
+            }
             inode = new Inode();
+
 
             // Now we have an Inode instance and an inumber
         }
 
-        if(inumber != -1) {
+        // If the inumber comes back -1 (invalid / not allowed) or if the
+        // Inode exists but is scheduled for deletion, do not allow
+        if(inumber != -1 && inode.flag != Inode.DELETE) {
             // Create newFTE with inode and inumber we have gotten
             newFTE = new FileTableEntry(inode, inumber, mode);
 
