@@ -38,15 +38,17 @@ public class Directory {
        try{
            freeInodes = fnsizes.length;
 
-           // Copy first (4 * maxInumber) = probably 256 bytes into fnsizes;
+           // Copy first (4 * maxInumber) = probably 192 bytes into fnsizes;
            // this should work as this (the Directory instance) must have been instantiated with
            // the correct number of Inodes... or else everything will break!
-           System.arraycopy(data, 0, fnsizes, 0, fnsizes.length);
+           for(int i = 0; i < fnsizes.length; ++i ){
+               fnsizes[i] = SysLib.bytes2int(data, i * 4);
+           }
 
            // Create new temporary byte array to hold the remainder; this allows us to work
            // without a nasty offset addition every iteration.
-           byte[] names = new byte[(data.length - fnsizes.length)];
-           System.arraycopy(data, fnsizes.length, names,0, names.length);
+           byte[] names = new byte[(data.length - (fnsizes.length * 4))];
+           System.arraycopy(data, fnsizes.length * 4, names,0, names.length);
 
            // track offset within names[] so that we can feed subsections to arraycopy simply
            int offset = 0;

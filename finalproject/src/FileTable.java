@@ -84,22 +84,27 @@ public class FileTable {
        // Check if e is in table; if so, unlink (decrement count) from the Inode,
        // Save back the Inode to disk (using the FTE's iNumber entry).
        if(table.contains(e)){
+
            Inode inode = e.inode;
 
-           // Attempt Inode write-back
-           if((inode.toDisk(e.iNumber)) != Kernel.ERROR){
-               // decrement the count of FTE references on the Inode
-               --inode.count;
+           // Decrement the FTE's count, in case it is a copy held by a child
+           e.count--;
 
-//               // If inode's count has reach 0 or below, mark it as unused
-//               if(inode.count <= 0){
-//                   inode.count = 0;
-//                   inode.flag = (inode.flag == inode.DELETE) ? inode.DELETE : inode.UNUSED;
-//               }
-
-               // Remove e from the table of used FTEs
+           // Only actually *remove* the FTE if nobody has any references to it.
+           if(e.count<= 0){
                table.remove(e);
+           }
 
+           // Decrement inode count
+           inode.count--;
+
+           // If nobody has any references to the inode, it can also be retired from active duty
+           if(inode.count == 0){
+               inodes.remove(inode);
+           }
+
+           // Attempt write-back; only report success if this also succeeds
+           if(inode.toDisk(e.iNumber) != Kernel.ERROR){
                found = true;
            }
        }

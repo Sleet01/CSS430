@@ -12,7 +12,7 @@ class Superblock {
 
     public Superblock( int diskSize ) {
         this.totalBlocks = diskSize;
-        this.totalInodes = 64;
+        this.totalInodes = 48;
         this.freeList = (int)Math.ceil(this.totalInodes / 16.0) + 1; // First free block should be first block after Inodes
         this.totalFreeBlocks = totalBlocks - freeList;
     }
@@ -77,6 +77,7 @@ class Superblock {
         fields.add(0, this.totalBlocks);
         fields.add(1, this.totalInodes);
         fields.add(2, this.freeList);
+        fields.add(3, this.totalFreeBlocks);
 
         return SysLib.list2Disk(fields, fieldSizes, (short)0, 0);
     }

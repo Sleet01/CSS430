@@ -69,12 +69,12 @@ public class Kernel
 	TCB myTcb;
 	switch( irq ) {
 	case INTERRUPT_SOFTWARE: // System calls
-	    switch( cmd ) { 
+	    switch( cmd ) {
 	    case BOOT:
 		// instantiate and start a scheduler
-		scheduler = new Scheduler( ); 
+		scheduler = new Scheduler( );
 		scheduler.start( );
-		
+
 		// instantiate and start a disk
 		disk = new Disk( 1000 );
 		disk.start( );
@@ -135,6 +135,17 @@ public class Kernel
 		return OK;
 	    case READ:
 		switch ( param ) {
+        default:{
+            int retval = ERROR;
+            if ((myTcb = scheduler.getMyTcb()) != null) {
+                int fd = param;
+                byte[] buffer = (byte[]) args;
+                if (myTcb.ftEnt[param] != null) {
+                    retval = fs.read(myTcb.getFtEnt(fd), buffer);
+                }
+            }
+            return retval;
+        }
 		case STDIN:
 		    try {
 			String s = input.readLine(); // read a keyboard input
@@ -145,7 +156,7 @@ public class Kernel
 			StringBuffer buf = ( StringBuffer )args;
 
 			// append the keyboard intput to this read buffer
-			buf.append( s ); 
+			buf.append( s );
 
 			// return the number of chars read from keyboard
 			return s.length( );
@@ -158,21 +169,30 @@ public class Kernel
 		    System.out.println( "threaOS: caused read errors" );
 		    return ERROR;
 		}
-		// return FileSystem.read( param, byte args[] );
-		return ERROR;
-	    case WRITE:
-		switch ( param ) {
-		case STDIN:
-		    System.out.println( "threaOS: cannot write to System.in" );
-		    return ERROR;
-		case STDOUT:
-		    System.out.print( (String)args );
-		    break;
-		case STDERR:
-		    System.err.print( (String)args );
-		    break;
+	    case WRITE: {
+			switch (param) {
+				default:
+					int retval = ERROR;
+					if ((myTcb = scheduler.getMyTcb()) != null) {
+						int fd = param;
+						byte[] buffer = (byte[]) args;
+						if (myTcb.ftEnt[param] != null) {
+							retval = fs.write(myTcb.getFtEnt(fd), buffer);
+						}
+					}
+					return retval;
+				case STDIN:
+					System.out.println("threaOS: cannot write to System.in");
+					return ERROR;
+				case STDOUT:
+					System.out.print((String) args);
+					break;
+				case STDERR:
+					System.err.print((String) args);
+					break;
+			}
+			return OK;
 		}
-		return OK;
 	    case CREAD:   // to be implemented in assignment 4
 		return cache.read( param, ( byte[] )args ) ? OK : ERROR;
 	    case CWRITE:  // to be implemented in assignment 4
@@ -183,23 +203,46 @@ public class Kernel
 	    case CFLUSH:  // to be implemented in assignment 4
 		cache.flush( );
 		return OK;
-	    case OPEN:    // to be implemented in project
+	    case OPEN: {    // to be implemented in project
 			int retval = ERROR;
-			if ( ( myTcb = scheduler.getMyTcb( ) ) != null ) {
-				String [] myArgs = (String [])args;
-			    FileTableEntry newFTE = fs.open( myArgs[0], myArgs[1] );
-			    int fdNum = myTcb.getFd(newFTE);
-				if((newFTE != null) && (fdNum != -1)){
-				    retval = fdNum;
+			if ((myTcb = scheduler.getMyTcb()) != null) {
+				String[] myArgs = (String[]) args;
+				FileTableEntry newFTE = fs.open(myArgs[0], myArgs[1]);
+				int fdNum = myTcb.getFd(newFTE);
+				if ((newFTE != null) && (fdNum != -1)) {
+					retval = fdNum;
 				}
 			}
-            return retval;
-	    case CLOSE:   // to be implemented in project
-		return OK;
+			return retval;
+		}
+	    case CLOSE: {   // to be implemented in project
+			int retval = ERROR;
+			if ((myTcb = scheduler.getMyTcb()) != null) {
+				int fd = param;
+				FileTableEntry fte = myTcb.getFtEnt(fd);
+				if (fte != null) {
+					retval = fs.close(fte);
+					if (retval == Kernel.OK){
+					    myTcb.returnFd(fd);
+					}
+				}
+			}
+			return retval;
+		}
 	    case SIZE:    // to be implemented in project
 		return OK;
-	    case SEEK:    // to be implemented in project
-		return OK;
+	    case SEEK: {    // to be implemented in project
+			int retval = ERROR;
+			if ((myTcb = scheduler.getMyTcb()) != null) {
+				int fd = param;
+				int[] myArgs = (int[])args;
+				FileTableEntry fte = myTcb.getFtEnt(fd);
+				if (fte != null) {
+					retval = fs.seek(fte, myArgs[0], myArgs[1]);
+				}
+			}
+			return retval;
+		}
 	    case FORMAT:
             return fs.format(param) ? OK : ERROR;
 	    case DELETE:  // to be implemented in project

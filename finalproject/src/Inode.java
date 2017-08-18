@@ -40,7 +40,7 @@ public class Inode {
 
     public Inode( short iNumber ) {                       // retrieving inode from disk
         short block = (short)(1 + (iNumber / 16)); // block 1 if iNumber is 0-15, 2 if 16-31, etc.
-        int offset = iNumber % 16;           // and the remainder shows the offset within the block
+        int offset = iNodeSize *( iNumber % 16 );           // and the remainder shows the offset within the block
 
         // Prep to load
         List<Object> fields = SysLib.disk2List(block, offset, fieldSizes);
