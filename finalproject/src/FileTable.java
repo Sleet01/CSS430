@@ -16,6 +16,12 @@ public class FileTable {
         inodes = new ArrayList<Inode>(maxInodes);   // ArrayList of used inodes
     }
 
+    public synchronized void sync(){
+        for(FileTableEntry fte: table){
+            fte.inode.toDisk(fte.iNumber);
+        }
+    }
+
     // major public methods
     public synchronized FileTableEntry falloc( String filename, String mode ) {
         // allocate a new file (structure) table entry for this file name
@@ -99,7 +105,7 @@ public class FileTable {
            inode.count--;
 
            // If nobody has any references to the inode, it can also be retired from active duty
-           if(inode.count == 0){
+           if(inode.count <= 0){
                inodes.remove(inode);
            }
 

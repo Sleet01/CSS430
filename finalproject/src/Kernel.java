@@ -128,6 +128,7 @@ public class Kernel
 		    ioQueue.enqueueAndSleep( COND_DISK_FIN );
 		return OK;
 	    case SYNC:     // synchronize disk data to a real file
+            fs.sync();
 		while ( disk.sync( ) == false )
 		    ioQueue.enqueueAndSleep( COND_DISK_REQ );
 		while ( disk.testAndResetReady( ) == false )
@@ -246,7 +247,7 @@ public class Kernel
 	    case FORMAT:
             return fs.format(param) ? OK : ERROR;
 	    case DELETE:  // to be implemented in project
-		return OK;
+            return (fs.delete((String)args)) ? OK : ERROR;
 	    }
 	    return ERROR;
 	case INTERRUPT_DISK: // Disk interrupts

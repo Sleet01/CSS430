@@ -40,10 +40,10 @@ public class Inode {
 
     public Inode( short iNumber ) {                       // retrieving inode from disk
         short block = (short)(1 + (iNumber / 16)); // block 1 if iNumber is 0-15, 2 if 16-31, etc.
-        int offset = iNodeSize *( iNumber % 16 );           // and the remainder shows the offset within the block
+        int offset = iNumber % 16 ;           // and the remainder shows the offset within the block
 
         // Prep to load
-        List<Object> fields = SysLib.disk2List(block, offset, fieldSizes);
+        List<Object> fields = SysLib.disk2List(block, offset * iNodeSize, fieldSizes);
 
         // Try to read in fields
         if(fields.get(0) != null) { // read-in from disk has succeeded
@@ -106,7 +106,7 @@ public class Inode {
         for (int i = 0; i < directSize; ++i){
             fields.add(3 + i, this.direct[i]);
         }
-        fields.add(fields.size() -1, this.indirect);
+        fields.add(fields.size(), this.indirect);
 
         // request write-back; this should only overwrite the bytes specific to this Inode
         return SysLib.list2Disk(fields, fieldSizes, block, offset * iNodeSize);

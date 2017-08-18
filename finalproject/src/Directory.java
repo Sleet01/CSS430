@@ -87,7 +87,7 @@ public class Directory {
        return success;
    }
 
-   public byte[] directory2bytes( ) {
+   public synchronized byte[] directory2bytes( ) {
       // converts and return Directory information into a plain byte array
       // this byte array will be written back to disk
       // note: only meaningful directory information should be converted
@@ -161,7 +161,7 @@ public class Directory {
     private short findNextFreeInode(short lastFree){
         short next = -1;
         if(freeInodes > 0){
-            for(int i = lastFree; i < fnsizes.length; ++i){
+            for(int i = lastFree + 1; i < fnsizes.length; ++i){
                 if(fnsizes[i] == 0){
                     next = (short)i;
                     break;
@@ -217,8 +217,9 @@ public class Directory {
            // Remove all information about this entry from Directory fields
            String key = new String(fnames[iNumber]);
            fnsizes[iNumber] = 0;
-           fnames[iNumber] = new char[0];
+           fnames[iNumber] = new char[maxChars];
            map.remove(key, iNumber);
+           map.remove(key);
 
            if( (++freeInodes) > fnsizes.length)
                freeInodes = fnsizes.length;
