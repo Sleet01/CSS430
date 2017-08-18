@@ -1,5 +1,14 @@
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author Martin L. Metke
+ * @date    2017/08/17
+ *
+ * The Directory class is mainly responsible for linking file names to Inodes,
+ * so that a text-based lookup can be performed when attempting to read, write, open,
+ * or delete a set of data.  It also regulates filename size and keeps track of the next
+ * free Inode (out of the limited supply).
+ */
 public class Directory {
     private static int maxChars = 30; // max characters of each file name
     private int freeInodes;     // Track how many inodes remain

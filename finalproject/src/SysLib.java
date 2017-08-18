@@ -1,5 +1,11 @@
 import java.util.*;
 
+/**
+ * @author Martin L. Metke
+ * @data    2017/08/17
+ *
+ * Modified version of SysLib, with the FileSystem functions and a pair of data-wrangling methods added.
+ */
 public class SysLib {
     public static int exec( String args[] ) {
         return Kernel.interrupt( Kernel.INTERRUPT_SOFTWARE,

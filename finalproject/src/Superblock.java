@@ -1,6 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Martin L. Metke
+ * @date    2017/08/17
+ *
+ * The Superblock class keeps track of how many blocks and Inodes are contained in the filesystem,
+ * but most importantly, keeps a pointer to the next free block as well as the total free block count.
+ */
 class Superblock {
     private final static int[] fieldSizes = {4, 4, 4, 4}; // Size of fields needed to store Superblock on disk
 

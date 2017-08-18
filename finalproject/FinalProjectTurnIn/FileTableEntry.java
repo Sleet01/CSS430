@@ -1,3 +1,10 @@
+/**
+ * @author Martin Metke
+ * @data    2017/08/17
+ *
+ * The FileTableEntry provides a linking mechanism between threads' file descriptors and the Inodes that track
+ * actual on-disk data.  There is almost no logic here.
+ */
 public class FileTableEntry {          // Each table entry should have
     public int seekPtr;                 //    a file seek pointer
     public final Inode inode;           //    a reference to its inode

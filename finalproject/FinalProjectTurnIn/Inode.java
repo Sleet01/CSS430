@@ -1,22 +1,19 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Martin Metke
+ * @date    2017/08/17
+ *
+ * The Inode class is link between a filename and actual data blocks on disk.
+ * It's really more of a glorified struct than anything else.
+ */
 public class Inode {
     private final static int iNodeSize = 32;       // fix to 32 bytes
     private final static int directSize = 11;      // # direct pointers
     private final static int[] fieldSizes = {4, 2, 2,
                                              2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                                              2};    // Field sizes of a serialized Inode
-    private final static int[] indirectSizes = {
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
-    }; // This is the field size array for the indirect block, which is 256 shorts in 512 bytes
 
     // Flag values
     public final static short UNUSED =    0;

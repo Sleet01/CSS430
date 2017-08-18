@@ -2,6 +2,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * @author Martin L. Metke
+ * @data    2017/08/17
+ *
+ * The FileTable class is mainly concerned with linking processes' file descriptors to Inodes
+ * that point to the actual data on disk.  It tracks which entries are accessing which files
+ * with which permissions, and is responsible for telling all Inodes to write to disk at sync.
+ */
 public class FileTable {
 
     private Vector<FileTableEntry> table;         // the actual entity of this file table

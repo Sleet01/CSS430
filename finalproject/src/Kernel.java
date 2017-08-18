@@ -2,6 +2,13 @@ import java.util.*;
 import java.lang.reflect.*;
 import java.io.*;
 
+/**
+ * @author Martin L. Metke
+ * @date	2017/08/17
+ *
+ * The kernel, modified by Martin for CSS430 Final Project.
+ * Responsible for handling interrupts and providing IO interfaces for consumers.
+ */
 public class Kernel
 {
     // Interrupt requests
@@ -136,7 +143,7 @@ public class Kernel
 		return OK;
 	    case READ:
 		switch ( param ) {
-        default:{
+        default:{	// Call FS' read function if this thread has a valid TCB
             int retval = ERROR;
             if ((myTcb = scheduler.getMyTcb()) != null) {
                 int fd = param;
@@ -172,7 +179,7 @@ public class Kernel
 		}
 	    case WRITE: {
 			switch (param) {
-				default:
+				default: // Assuming a valid TCB, writes the passed-in buffer to disk via the FS.
 					int retval = ERROR;
 					if ((myTcb = scheduler.getMyTcb()) != null) {
 						int fd = param;
