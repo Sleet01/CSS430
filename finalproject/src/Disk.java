@@ -117,8 +117,7 @@ public class Disk extends Thread {
 
     private void seek() {
 
-        //int var1 = 20 + 1 * Math.abs(this.targetBlockId / 10 - this.currentBlockId / 10);
-        int var1 = 1;
+        int var1 = 20 + 1 * Math.abs(this.targetBlockId / 10 - this.currentBlockId / 10);
 
         try {
             Thread.sleep((long)var1);
